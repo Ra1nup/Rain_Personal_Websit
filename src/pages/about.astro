@@ -1,0 +1,688 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const pageTitle = "About Me";
+---
+
+<BaseLayout title={pageTitle}>
+    <div class="about-container">
+        <!-- Header Section -->
+        <section class="header-section fade-in">
+            <h1 class="gradient-text">About Me</h1>
+        </section>
+
+        <!-- Profile Section -->
+        <section class="profile-section fade-in delay-1">
+            <div class="profile-card glass">
+                <div class="profile-image-container">
+                    <img
+                        src="/QiKang.png"
+                        alt="QiKang (Rain)"
+                        class="profile-image"
+                    />
+                </div>
+                <div class="profile-info">
+                    <div class="info-header">
+                        <h2 class="name">
+                            QiKang <span class="nickname">(Rain)</span>
+                        </h2>
+                        <p class="role">Computer Science Student</p>
+                    </div>
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="label">Location</span>
+                            <span class="value">Beijing, China</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">MBTI</span>
+                            <span class="value">ENFJ-A</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="label">Zodiac</span>
+                            <span class="value">Taurus</span>
+                        </div>
+                    </div>
+
+                    <div class="hobbies-container">
+                        <span class="label">Hobbies & Interests</span>
+                        <div class="tags">
+                            <span class="tag">Fitness</span>
+                            <span class="tag">Basketball</span>
+                            <span class="tag">Music</span>
+                            <span class="tag">Reading</span>
+                            <span class="tag">Video Games</span>
+                            <span class="tag">Delicious Food</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Favorites Section -->
+        <section class="favorites-section fade-in delay-2">
+            <h2 class="section-title">Favorite Video Games</h2>
+            <div class="carousel-container glass">
+                <button
+                    class="carousel-btn prev-btn"
+                    aria-label="Previous slide"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><path d="M15 18l-6-6 6-6"></path></svg
+                    >
+                </button>
+
+                <div class="carousel-track-container">
+                    <ul class="carousel-track">
+                        <li class="carousel-slide current-slide">
+                            <img
+                                src="/cs2.png"
+                                alt="Counter-Strike 2"
+                                class="carousel-image"
+                                data-title="Counter-Strike 2"
+                            />
+                        </li>
+                        <li class="carousel-slide">
+                            <img
+                                src="/overwatch.jpg"
+                                alt="Overwatch"
+                                class="carousel-image"
+                                data-title="Overwatch"
+                            />
+                        </li>
+                        <li class="carousel-slide">
+                            <img
+                                src="/League of Legends.jpg"
+                                alt="League of Legends"
+                                class="carousel-image"
+                                data-title="League of Legends"
+                            />
+                        </li>
+                        <li class="carousel-slide">
+                            <img
+                                src="/valorant.png"
+                                alt="Valorant"
+                                class="carousel-image"
+                                data-title="Valorant"
+                            />
+                        </li>
+                    </ul>
+                </div>
+
+                <button class="carousel-btn next-btn" aria-label="Next slide">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><path d="M9 18l6-6-6-6"></path></svg
+                    >
+                </button>
+            </div>
+            <p class="carousel-caption"></p>
+        </section>
+    </div>
+</BaseLayout>
+
+<script>
+    // Carousel Logic - Infinite Loop with Clones
+    const track = document.querySelector(".carousel-track") as HTMLElement;
+    let slides = Array.from(track.children) as HTMLElement[];
+    const nextButton = document.querySelector(".next-btn");
+    const prevButton = document.querySelector(".prev-btn");
+    const caption = document.querySelector(".carousel-caption") as HTMLElement;
+
+    if (track && slides.length > 0) {
+        // Clone first and last slides
+        const firstClone = slides[0].cloneNode(true) as HTMLElement;
+        const lastClone = slides[slides.length - 1].cloneNode(
+            true,
+        ) as HTMLElement;
+
+        firstClone.classList.add("clone-first");
+        lastClone.classList.add("clone-last");
+
+        // Append/Prepend clones
+        track.appendChild(firstClone);
+        track.insertBefore(lastClone, slides[0]);
+
+        // Re-query slides to include clones
+        slides = Array.from(track.children) as HTMLElement[];
+
+        // Use let for responsiveness
+        let slideWidth = slides[0].getBoundingClientRect().width;
+
+        // Initial state: Show the real first slide (index 1)
+        let currentIndex = 1;
+
+        // Helper to update caption
+        const updateCaption = (index: number) => {
+            if (!caption) return;
+            const img = slides[index].querySelector("img");
+            if (img && img.dataset.title) {
+                caption.textContent = img.dataset.title;
+                // Trigger a subtle animation
+                caption.classList.remove("fade-text");
+                void caption.offsetWidth; // trigger reflow
+                caption.classList.add("fade-text");
+            }
+        };
+
+        // Arrange the slides next to one another
+        const setSlidePosition = (slide: HTMLElement, index: number) => {
+            slide.style.left = slideWidth * index + "px";
+        };
+        slides.forEach(setSlidePosition);
+
+        // Move to initial position without animation
+        track.style.transition = "none";
+        track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+        slides[currentIndex].classList.add("current-slide");
+        updateCaption(currentIndex);
+
+        const moveToSlide = (index: number, animate = true) => {
+            if (animate) {
+                track.style.transition =
+                    "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
+            } else {
+                track.style.transition = "none";
+            }
+            track.style.transform = `translateX(-${slideWidth * index}px)`;
+
+            // Update active class
+            track
+                .querySelector(".current-slide")
+                ?.classList.remove("current-slide");
+            slides[index].classList.add("current-slide");
+
+            currentIndex = index;
+            updateCaption(index);
+        };
+
+        // click left
+        prevButton?.addEventListener("click", () => {
+            if (currentIndex <= 0) return; // Wait for reset
+            moveToSlide(currentIndex - 1);
+        });
+
+        // click right
+        nextButton?.addEventListener("click", () => {
+            if (currentIndex >= slides.length - 1) return; // Wait for reset
+            moveToSlide(currentIndex + 1);
+        });
+
+        // Handle Loop Reset on Transition End
+        track.addEventListener("transitionend", (e) => {
+            if (e.propertyName !== "transform") return;
+
+            if (slides[currentIndex].classList.contains("clone-last")) {
+                // We are at the clone of the last slide (index 0).
+                // Jump to the real last slide (index slides.length - 2).
+                track.style.transition = "none";
+                currentIndex = slides.length - 2;
+                track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+
+                track
+                    .querySelector(".current-slide")
+                    ?.classList.remove("current-slide");
+                slides[currentIndex].classList.add("current-slide");
+            }
+
+            if (slides[currentIndex].classList.contains("clone-first")) {
+                // We are at the clone of the first slide (last index).
+                // Jump to the real first slide (index 1).
+                track.style.transition = "none";
+                currentIndex = 1;
+                track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+
+                track
+                    .querySelector(".current-slide")
+                    ?.classList.remove("current-slide");
+                slides[currentIndex].classList.add("current-slide");
+            }
+        });
+
+        // Resize handler to fix positions
+        window.addEventListener("resize", () => {
+            slideWidth = slides[0].getBoundingClientRect().width;
+            slides.forEach((slide, index) => {
+                slide.style.left = slideWidth * index + "px";
+            });
+            // Update transform to stay on current slide
+            track.style.transition = "none";
+            track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
+        });
+    }
+</script>
+
+<style>
+    .about-container {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 4rem 2rem 4rem; /* Top padding for fixed navbar */
+        display: flex;
+        flex-direction: column;
+        gap: 4rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 1s ease-out forwards;
+    }
+
+    .delay-1 {
+        animation-delay: 0.2s;
+    }
+    .delay-2 {
+        animation-delay: 0.4s;
+    }
+
+    /* Header Section */
+    .header-section {
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        margin: 0;
+    }
+
+    .gradient-text {
+        background: linear-gradient(135deg, #1d1d1f 0%, #434344 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    :global(.dark) .gradient-text {
+        background: linear-gradient(135deg, #f5f5f7 0%, #86868b 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    /* Profile Section */
+    .profile-card {
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 4rem;
+        padding: 3rem;
+        border-radius: 32px; /* More rounded, closer to Material 3 */
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+        align-items: start;
+    }
+
+    :global(.dark) .profile-card {
+        background: rgba(30, 30, 32, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-image-container {
+        width: 100%;
+        aspect-ratio: 3/4;
+        border-radius: 24px;
+        overflow: hidden;
+        background-color: #f0f0f0;
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .profile-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .profile-image:hover {
+        transform: scale(1.03);
+    }
+
+    :global(.dark) .profile-image-container {
+        background-color: #2c2c2e;
+    }
+
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+        padding-top: 1rem;
+    }
+
+    /* Material/Google Style Typography & Layout */
+    .info-header .name {
+        font-size: 2.5rem;
+        font-weight: 500; /* Google Sans typically uses lighter weights for headings */
+        color: var(--color-text-main);
+        margin: 0 0 0.5rem 0;
+        line-height: 1.2;
+    }
+
+    .nickname {
+        font-weight: 400;
+        color: var(--color-text-secondary);
+        font-size: 0.8em;
+    }
+
+    .role {
+        font-size: 1.25rem;
+        color: var(--color-accent);
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .label {
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-text-secondary);
+        font-weight: 600;
+    }
+
+    .value {
+        font-size: 1.125rem;
+        color: var(--color-text-main);
+        font-weight: 400;
+    }
+
+    .hobbies-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    /* Material 3 Style Chips */
+    .tag {
+        padding: 0.5rem 1rem;
+        background-color: rgba(0, 0, 0, 0.05); /* Surface Container Low */
+        color: var(--color-text-main);
+        border-radius: 8px; /* Small radius for aesthetic, or 16px for full pill */
+        font-size: 0.9375rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        border: 1px solid transparent;
+    }
+
+    .tag:hover {
+        background-color: rgba(0, 113, 227, 0.1); /* Tint with accent color */
+        color: var(--color-accent);
+        transform: translateY(-1px);
+    }
+
+    :global(.dark) .tag {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    :global(.dark) .tag:hover {
+        background-color: rgba(10, 132, 255, 0.2);
+        color: #409cff;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 900px) {
+        .profile-card {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        .profile-image-container {
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .profile-info {
+            text-align: center;
+            align-items: center;
+        }
+
+        .info-grid {
+            width: 100%;
+            justify-items: center;
+        }
+
+        .tags {
+            justify-content: center;
+        }
+    }
+
+    /* Favorites Section */
+    .favorites-section {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--color-text-main);
+    }
+
+    .carousel-container {
+        position: relative;
+        height: 500px; /* Adjust based on image content */
+        width: 100%;
+        margin: 0 auto;
+        border-radius: 24px;
+        overflow: hidden;
+        padding: 2rem 0; /* Space for buttons effectively if outside, but buttons are inside */
+        display: flex;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .carousel-caption {
+        text-align: center;
+        font-size: 1.75rem;
+        font-weight: 500;
+        margin-top: 1.5rem;
+        color: var(--color-text-main);
+        letter-spacing: -0.01em;
+        height: 2.5rem; /* Reserve space */
+        transition: opacity 0.3s ease;
+    }
+
+    @keyframes fadeInText {
+        from {
+            opacity: 0;
+            transform: translateY(5px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fade-text {
+        animation: fadeInText 0.5s ease forwards;
+        margin-top: 0%;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    :global(.dark) .carousel-container {
+        background: rgba(28, 28, 30, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .carousel-track-container {
+        height: 100%;
+        width: 80%; /* Main carousel width */
+        margin: 0 auto;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .carousel-track {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        position: relative;
+        height: 100%;
+        transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    .carousel-slide {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        padding: 0 4rem; /* Gap between slides - increased mainly to show partial next slide or just center better */
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 16px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease;
+    }
+
+    .carousel-image:hover {
+        transform: scale(1.02);
+    }
+
+    .carousel-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255, 255, 255, 0.8);
+        border: none;
+        width: 3rem;
+        height: 3rem;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        color: #1d1d1f;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    :global(.dark) .carousel-btn {
+        background: rgba(60, 60, 60, 0.8);
+        color: #f5f5f7;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .carousel-btn:hover {
+        transform: translateY(-50%) scale(1.1);
+        background: rgba(255, 255, 255, 1);
+    }
+    :global(.dark) .carousel-btn:hover {
+        background: rgba(80, 80, 80, 1);
+    }
+
+    .prev-btn {
+        left: 2rem;
+    }
+
+    .next-btn {
+        right: 2rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .about-container {
+            padding-top: 6rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+        }
+
+        .profile-card {
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .profile-image-container {
+            width: 200px;
+            margin: 0 auto;
+        }
+
+        .profile-info {
+            align-items: center;
+        }
+
+        .carousel-container {
+            height: 300px;
+        }
+
+        .prev-btn {
+            left: 0.5rem;
+        }
+        .next-btn {
+            right: 0.5rem;
+        }
+
+        .carousel-track-container {
+            width: 100%;
+        }
+    }
+</style>
