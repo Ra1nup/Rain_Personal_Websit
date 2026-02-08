@@ -1,0 +1,142 @@
+---
+
+---
+
+<section class="hero">
+    <div class="container hero-content">
+        <h1 class="headline">Design. Code. Innovate.</h1>
+        <p class="subheadline">Building digital experiences that matter.</p>
+
+        <div class="cta-group">
+            <a href="#work" class="button primary">View Work</a>
+            <a href="#contact" class="button secondary">Contact Me</a>
+        </div>
+
+        <div class="hero-image-placeholder">
+            <!-- Placeholder for hero image/graphic -->
+            <div class="placeholder-graphic"></div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .hero {
+        padding: var(--spacing-xl) 0;
+        text-align: center;
+        overflow: hidden;
+    }
+
+    .hero-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--spacing-md);
+    }
+
+    .headline {
+        font-size: clamp(2.5rem, 5vw, 4.5rem);
+        font-weight: 700;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #0071e3 0%, #bf5af2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        padding-bottom: 0.2em; /* Prevent descender clipping */
+    }
+
+    /* Dark mode gradient */
+    /* Dark mode gradient */
+    :global(.dark) .headline {
+        background: linear-gradient(135deg, #2997ff 0%, #d488ff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .subheadline {
+        font-size: clamp(1.2rem, 2vw, 1.5rem);
+        color: var(--color-text-secondary);
+        max-width: 600px;
+        font-weight: 400;
+    }
+
+    .cta-group {
+        display: flex;
+        gap: var(--spacing-md);
+        margin-top: var(--spacing-md);
+    }
+
+    .button {
+        padding: 12px 24px;
+        border-radius: var(--radius-full);
+        font-size: 1rem;
+        font-weight: 500;
+        text-align: centering;
+        transition: all 0.2s ease;
+    }
+
+    .button.primary {
+        background-color: var(--color-accent);
+        color: white;
+    }
+
+    .button.primary:hover {
+        background-color: #0077ed; /* Slightly lighter blue */
+        transform: scale(1.02);
+    }
+
+    .button.secondary {
+        background-color: transparent;
+        color: var(--color-accent);
+        box-shadow: inset 0 0 0 1px var(--color-accent); /* Border imitation */
+    }
+
+    .button.secondary:hover {
+        background-color: rgba(0, 113, 227, 0.1);
+    }
+
+    .hero-image-placeholder {
+        margin-top: var(--spacing-xl);
+        width: 100%;
+        max-width: 800px;
+        height: 400px;
+        background: #fbfbfd;
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .placeholder-graphic {
+        width: 60%;
+        height: 60%;
+        background: linear-gradient(
+            45deg,
+            #ff9a9e 0%,
+            #fad0c4 99%,
+            #fad0c4 100%
+        );
+        border-radius: 50%;
+        filter: blur(60px);
+        opacity: 0.6;
+        animation: pulse 8s infinite alternate;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(0.8);
+            opacity: 0.5;
+        }
+        100% {
+            transform: scale(1.1);
+            opacity: 0.7;
+        }
+    }
+
+    @media (prefers-color-scheme: dark) {
+        .hero-image-placeholder {
+            background: #1c1c1e;
+        }
+    }
+</style>

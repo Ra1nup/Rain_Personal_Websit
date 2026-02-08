@@ -1,0 +1,201 @@
+---
+import ThemeToggle from "./ThemeToggle.astro";
+---
+
+<nav class="navbar glass">
+    <div class="container navbar-content">
+        <a href="/" class="logo-link" aria-label="Home">
+            <img
+                src="/rainup_white.ico"
+                alt="Rain Logo"
+                class="logo-img logo-day"
+            />
+            <img
+                src="/rainup.ico"
+                alt="Rain Logo"
+                class="logo-img logo-night"
+            />
+            <span class="brand-name">Rainup</span>
+        </a>
+
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="#about">About</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#blog">Blog</a>
+            <a href="#board">Board</a>
+            <a href="#contact">Contact</a>
+        </div>
+
+        <div class="theme-toggle-wrapper">
+            <ThemeToggle />
+        </div>
+
+        <button class="menu-toggle" aria-label="Toggle Menu">
+            <span></span>
+            <span></span>
+        </button>
+    </div>
+</nav>
+
+<script>
+    // Mobile menu toggle logic
+    const menuToggle = document.querySelector(".menu-toggle");
+    const navLinks = document.querySelector(".nav-links");
+
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener("click", () => {
+            navLinks.classList.toggle("active");
+        });
+    }
+</script>
+
+<style>
+    .navbar {
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        height: 60px; /* Increased height for larger logo */
+        display: flex;
+        align-items: center;
+        background: var(--color-navbar-bg); /* Use variable for theming */
+        transition: background-color 0.3s ease;
+    }
+
+    .navbar-content {
+        display: flex;
+        justify-content: space-between; /* Default for mobile */
+        align-items: center;
+        width: 100%;
+        max-width: 980px;
+        position: relative; /* Needed for absolute positioning */
+    }
+
+    .theme-toggle-wrapper {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        display: none; /* Hidden on mobile by default, or maybe visible if space allows? Let's hide on mobile first to match "simple" */
+    }
+
+    /* Desktop Styles */
+    @media (min-width: 768px) {
+        .navbar-content {
+            justify-content: center; /* Center on desktop */
+            gap: 40px; /* Consistent gap between logo and links */
+        }
+
+        .theme-toggle-wrapper {
+            display: block;
+        }
+    }
+
+    .logo-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-decoration: none;
+        gap: 8px; /* Space between logo and text */
+        transition: opacity 0.2s ease;
+    }
+
+    .logo-img {
+        height: 32px; /* Increased from 24px */
+        width: auto;
+    }
+
+    /* Theme-based Logo Toggling */
+    .logo-day {
+        display: block;
+    }
+
+    .logo-night {
+        display: none;
+    }
+
+    :global(.dark) .logo-day {
+        display: none;
+    }
+
+    :global(.dark) .logo-night {
+        display: block;
+    }
+
+    .brand-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--color-text-main);
+        letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+        display: flex;
+        gap: 40px; /* Wider spacing like Apple */
+        align-items: center;
+    }
+
+    .nav-links a {
+        font-size: 13px; /* Slightly smaller, refined font size */
+        color: var(--color-text-main);
+        opacity: 0.8;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+    }
+
+    .nav-links a:hover {
+        opacity: 1;
+        color: var(--color-accent);
+    }
+
+    .menu-toggle {
+        display: none;
+        background: none;
+        border: none;
+        cursor: pointer;
+        flex-direction: column;
+        gap: 4px;
+        padding: 4px;
+    }
+
+    .menu-toggle span {
+        display: block;
+        width: 18px;
+        height: 2px;
+        background-color: var(--color-text-main);
+        border-radius: 2px;
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 768px) {
+        .nav-links {
+            display: none;
+            position: absolute;
+            top: 60px; /* Adjusted for new navbar height */
+            left: 0;
+            width: 100%;
+            height: calc(100vh - 60px); /* Full screen menu adjusted */
+            background: var(--color-bg);
+            flex-direction: column;
+            padding: 40px var(--spacing-md);
+            border-top: 1px solid var(--color-border);
+            gap: 24px;
+        }
+
+        .nav-links.active {
+            display: flex;
+        }
+
+        .nav-links a {
+            font-size: 1.5rem; /* Larger tap targets on mobile */
+            border-bottom: 1px solid var(--color-border);
+            width: 100%;
+            padding-bottom: 12px;
+        }
+
+        .menu-toggle {
+            display: flex;
+        }
+    }
+</style>
