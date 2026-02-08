@@ -4,17 +4,31 @@
 
 <section class="hero">
     <div class="container hero-content">
-        <h1 class="headline">Design. Code. Innovate.</h1>
-        <p class="subheadline">Building digital experiences that matter.</p>
+        <h1 class="headline">
+            Hello, I'm Qi Kang. <span class="wave-emoji">👋</span>
+        </h1>
+        <p class="subheadline">
+            Developer & Creator. Building digital experiences with passion.
+        </p>
 
         <div class="cta-group">
-            <a href="#work" class="button primary">View Work</a>
+            <a href="#work" class="button primary">About Me</a>
             <a href="#contact" class="button secondary">Contact Me</a>
         </div>
 
-        <div class="hero-image-placeholder">
-            <!-- Placeholder for hero image/graphic -->
-            <div class="placeholder-graphic"></div>
+        <div class="hero-image-container">
+            <img
+                src="/flower.jpg"
+                alt="Flower Decoration"
+                class="hero-image"
+                width="800"
+                height="500"
+            />
+            <p class="hero-caption">
+                Deep green leaves cradle clusters of pink and red roses, their
+                petals glistening with dewdrops, breathing softly in the quiet
+                garden.
+            </p>
         </div>
     </div>
 </section>
@@ -55,7 +69,7 @@
     .subheadline {
         font-size: clamp(1.2rem, 2vw, 1.5rem);
         color: var(--color-text-secondary);
-        max-width: 600px;
+        max-width: 800px;
         font-weight: 400;
     }
 
@@ -77,6 +91,7 @@
     .button.primary {
         background-color: var(--color-accent);
         color: white;
+        width: 150px;
     }
 
     .button.primary:hover {
@@ -88,55 +103,86 @@
         background-color: transparent;
         color: var(--color-accent);
         box-shadow: inset 0 0 0 1px var(--color-accent); /* Border imitation */
+        width: 150px;
     }
 
     .button.secondary:hover {
         background-color: rgba(0, 113, 227, 0.1);
     }
 
-    .hero-image-placeholder {
+    .hero-image-container {
         margin-top: var(--spacing-xl);
         width: 100%;
         max-width: 800px;
-        height: 400px;
-        background: #fbfbfd;
-        border-radius: var(--radius-lg);
-        display: flex;
-        align-items: center;
-        justify-content: center;
         position: relative;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: auto;
+        border-radius: var(--radius-lg);
         box-shadow: var(--shadow-lg);
+        display: block;
+        transition: transform 0.3s ease;
     }
 
-    .placeholder-graphic {
-        width: 60%;
-        height: 60%;
-        background: linear-gradient(
-            45deg,
-            #ff9a9e 0%,
-            #fad0c4 99%,
-            #fad0c4 100%
-        );
-        border-radius: 50%;
-        filter: blur(60px);
-        opacity: 0.6;
-        animation: pulse 8s infinite alternate;
+    .hero-caption {
+        margin-top: var(--spacing-lg);
+        font-family:
+            -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+            Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+            "Segoe UI Symbol";
+        font-size: 1rem;
+        font-weight: 500;
+        color: #86868b; /* Apple's signature subtle gray text color */
+        text-align: center;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.5;
+        letter-spacing: -0.01em;
+        margin-top: 10px;
     }
 
-    @keyframes pulse {
+    .hero-image:hover {
+        transform: scale(1.02);
+    }
+
+    @keyframes wave-animation {
         0% {
-            transform: scale(0.8);
-            opacity: 0.5;
+            transform: rotate(0deg);
+        }
+        10% {
+            transform: rotate(14deg);
+        }
+        20% {
+            transform: rotate(-8deg);
+        }
+        30% {
+            transform: rotate(14deg);
+        }
+        40% {
+            transform: rotate(-4deg);
+        }
+        50% {
+            transform: rotate(10deg);
+        }
+        60% {
+            transform: rotate(0deg);
         }
         100% {
-            transform: scale(1.1);
-            opacity: 0.7;
+            transform: rotate(0deg);
         }
     }
 
-    @media (prefers-color-scheme: dark) {
-        .hero-image-placeholder {
-            background: #1c1c1e;
-        }
+    .wave-emoji {
+        display: inline-block;
+        animation-name: wave-animation;
+        animation-duration: 2.5s;
+        animation-iteration-count: infinite;
+        transform-origin: 70% 70%;
+        background: none;
+        -webkit-background-clip: initial;
+        -webkit-text-fill-color: initial;
     }
 </style>
