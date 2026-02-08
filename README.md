@@ -1,46 +1,59 @@
-# Astro Starter Kit: Basics
+# Ra1nup.top | Personal Website
 
-```sh
-npm create astro@latest -- --template basics
-```
+> 正在构建的个人数字花园。追求极致的性能、极简的 Apple 风格设计与流畅的交互体验。
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## ✨ 项目亮点 (Features)
 
-## 🚀 Project Structure
+* **极简美学**: 采用 Apple 风格设计语言，包含磨砂玻璃 (Frosted Glass) 导航栏、圆角卡片与细腻的阴影。
+* **高性能架构**: 基于 **Astro** 构建，默认输出零 JS 的静态 HTML，确保秒开速度。
+* **动态交互**: 核心交互组件使用 **Vue 3** 编写，配合 `lucide-vue-next` 实现优雅的动态图标动画。
+* **Bento Grid**: 关于页面采用流行的“便当盒”网格布局，直观展示个人信息。
 
-Inside of your Astro project, you'll see the following folders and files:
+## 🛠️ 技术栈 (Tech Stack)
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+* **核心框架**: [Astro](https://astro.build/) (v4+)
+* **UI 框架**: [Vue 3](https://vuejs.org/)
+* **样式库**: [Tailwind CSS](https://tailwindcss.com/)
+* **部署**: Vercel / GitHub Pages
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## 🚀 快速开始 (Getting Started)
 
-## 🧞 Commands
+如果你想在本地运行此项目：
 
-All commands are run from the root of the project, from a terminal:
+1.  **克隆项目**
+    ```bash
+    git clone [https://github.com/Ra1nup/Rain_Personal_Websit.git](https://github.com/Ra1nup/Rain_Personal_Websit.git)
+    cd Rain_Personal_Websit
+    ```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+2.  **安装依赖**
+    ```bash
+    npm install
+    ```
 
-## 👀 Want to learn more?
+3.  **启动开发服务器**
+    ```bash
+    npm run dev
+    ```
+    打开浏览器访问 `http://localhost:4321` 即可预览。
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+## 📅 开发进度 (Roadmap)
+
+### Phase 1: 基础建设 (Current Focus)
+- [x] **环境初始化**: Astro + Vue + Tailwind 配置完成
+- [x] **依赖安装**: 集成 `lucide-vue-next` 图标库
+- [x] **视觉识别**: 设计并配置 Logo (`logo.png`, `favicon.svg`)
+- [x] **全局布局**: 实现磨砂玻璃效果的 Header 与极简 Footer
+- [ ] **首页开发**: 包含 Hero 区域与动态欢迎语
+- [ ] **关于页**: 实现 Bento Grid 布局展示个人简介
+- [ ] **联系页**: 简洁的联系方式列表
+
+### Phase 2: 内容与优化 (Future)
+- [ ] 集成 Markdown 博客系统
+- [ ] 添加深色模式 (Dark Mode)
+- [ ] 增加 SEO 元数据优化
+- [ ] 部署上线
+
+## 📄 License
+
+MIT License © 2026 Ra1nup
