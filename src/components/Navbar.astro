@@ -46,6 +46,14 @@ import ThemeToggle from "./ThemeToggle.astro";
     if (menuToggle && navLinks) {
         menuToggle.addEventListener("click", () => {
             navLinks.classList.toggle("active");
+            menuToggle.classList.toggle("active");
+        });
+
+        navLinks.querySelectorAll("a").forEach((link) => {
+            link.addEventListener("click", () => {
+                navLinks.classList.remove("active");
+                menuToggle.classList.remove("active");
+            });
         });
     }
 </script>
@@ -170,28 +178,85 @@ import ThemeToggle from "./ThemeToggle.astro";
     /* Mobile Styles */
     @media (max-width: 768px) {
         .nav-links {
-            display: none;
+            display: flex;
+            flex-direction: column;
             position: absolute;
-            top: 60px; /* Adjusted for new navbar height */
+            top: 46px;
             left: 0;
             width: 100%;
-            height: calc(100vh - 60px); /* Full screen menu adjusted */
-            background: var(--color-bg);
-            flex-direction: column;
-            padding: 40px var(--spacing-md);
+            height: calc(100vh - 60px);
+            background: rgba(
+                255,
+                255,
+                255,
+                0.98
+            ); /* Less transparency for legibility */
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 24px 32px; /* Nicer padding */
             border-top: 1px solid var(--color-border);
-            gap: 24px;
+            gap: 20px;
+
+            /* Hidden state */
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+
+        :global(.dark) .nav-links {
+            background: rgba(0, 0, 0, 0.95);
         }
 
         .nav-links.active {
-            display: flex;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
 
         .nav-links a {
-            font-size: 1.5rem; /* Larger tap targets on mobile */
-            border-bottom: 1px solid var(--color-border);
+            font-family:
+                -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI",
+                Roboto, Helvetica, Arial, sans-serif;
+            font-size: 24px; /* Sophisticated size */
+            font-weight: 600;
+            color: var(--color-text-main);
             width: 100%;
-            padding-bottom: 12px;
+            text-align: left; /* Left aligned as requested */
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05); /* Very subtle separator */
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: all 0.3s ease;
+        }
+
+        :global(.dark) .nav-links a {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Staggered animation for links */
+        .nav-links.active a {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .nav-links.active a:nth-child(1) {
+            transition-delay: 0.05s;
+        }
+        .nav-links.active a:nth-child(2) {
+            transition-delay: 0.1s;
+        }
+        .nav-links.active a:nth-child(3) {
+            transition-delay: 0.15s;
+        }
+        .nav-links.active a:nth-child(4) {
+            transition-delay: 0.2s;
+        }
+        .nav-links.active a:nth-child(5) {
+            transition-delay: 0.25s;
+        }
+        .nav-links.active a:nth-child(6) {
+            transition-delay: 0.3s;
         }
 
         .menu-toggle {
