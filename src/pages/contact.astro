@@ -208,6 +208,38 @@ import BaseLayout from "../layouts/BaseLayout.astro";
         );
     }
 
+    /* Mobile adjustments for contact cards */
+    @media (max-width: 768px) {
+        .contact-card {
+            padding: 20px !important;
+            height: auto !important;
+            min-height: 160px;
+        }
+
+        .contact-card .content {
+            position: relative !important;
+            opacity: 1 !important;
+            transform: none !important;
+            height: auto !important;
+            margin: 4px 0;
+        }
+
+        .hover-detail {
+            margin-top: 8px;
+        }
+
+        .icon-wrapper {
+            width: 48px !important;
+            height: 48px !important;
+            margin-bottom: 8px;
+        }
+
+        .icon {
+            width: 24px !important;
+            height: 24px !important;
+        }
+    }
+
     :global(.dark) .title-card {
         background: linear-gradient(
             135deg,
