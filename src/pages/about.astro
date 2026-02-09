@@ -24,7 +24,7 @@ const pageTitle = "About Me";
                 <div class="profile-info">
                     <div class="info-header">
                         <h2 class="name">
-                            QiKang <span class="nickname">(Rain)</span>
+                            Qi Kang <span class="nickname">(Rain)</span>
                         </h2>
                         <p class="role">Computer Science Student</p>
                     </div>
@@ -53,13 +53,13 @@ const pageTitle = "About Me";
                             <span class="tag">Reading</span>
                             <span class="tag">Video Games</span>
                             <span class="tag">Delicious Food</span>
+                            <span class="tag">Coding</span>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Favorites Section -->
         <section class="favorites-section fade-in delay-2">
             <h2 class="section-title">Favorite Video Games</h2>
             <div class="carousel-container glass">
@@ -85,7 +85,7 @@ const pageTitle = "About Me";
                     <ul class="carousel-track">
                         <li class="carousel-slide current-slide">
                             <img
-                                src="/cs2.png"
+                                src="/about/Video Games/cs2.png"
                                 alt="Counter-Strike 2"
                                 class="carousel-image"
                                 data-title="Counter-Strike 2"
@@ -93,7 +93,7 @@ const pageTitle = "About Me";
                         </li>
                         <li class="carousel-slide">
                             <img
-                                src="/overwatch.jpg"
+                                src="/about/Video Games/overwatch.jpg"
                                 alt="Overwatch"
                                 class="carousel-image"
                                 data-title="Overwatch"
@@ -101,7 +101,7 @@ const pageTitle = "About Me";
                         </li>
                         <li class="carousel-slide">
                             <img
-                                src="/League of Legends.jpg"
+                                src="/about/Video Games/League of Legends.jpg"
                                 alt="League of Legends"
                                 class="carousel-image"
                                 data-title="League of Legends"
@@ -109,10 +109,87 @@ const pageTitle = "About Me";
                         </li>
                         <li class="carousel-slide">
                             <img
-                                src="/valorant.png"
+                                src="/about/Video Games/valorant.png"
                                 alt="Valorant"
                                 class="carousel-image"
                                 data-title="Valorant"
+                            />
+                        </li>
+                    </ul>
+                </div>
+
+                <button class="carousel-btn next-btn" aria-label="Next slide">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><path d="M9 18l6-6-6-6"></path></svg
+                    >
+                </button>
+            </div>
+            <p class="carousel-caption"></p>
+        </section>
+
+        <!-- Favorite NBA Player Section -->
+        <section class="favorites-section fade-in delay-3">
+            <h2 class="section-title">Favorite NBA Player</h2>
+            <div class="carousel-container glass">
+                <button
+                    class="carousel-btn prev-btn"
+                    aria-label="Previous slide"
+                >
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><path d="M15 18l-6-6 6-6"></path></svg
+                    >
+                </button>
+
+                <div class="carousel-track-container">
+                    <ul class="carousel-track">
+                        <li class="carousel-slide current-slide">
+                            <img
+                                src="/about/NBA Player/Stephen-Curry.png"
+                                alt="Stephen Curry"
+                                class="carousel-image"
+                                data-title="Stephen Curry"
+                            />
+                        </li>
+                        <li class="carousel-slide">
+                            <img
+                                src="/about/NBA Player/Dončić.png"
+                                alt="Luka Dončić"
+                                class="carousel-image"
+                                data-title="Luka Dončić"
+                            />
+                        </li>
+                        <li class="carousel-slide">
+                            <img
+                                src="/about/NBA Player/Durant.png"
+                                alt="Kevin Durant"
+                                class="carousel-image"
+                                data-title="Kevin Durant"
+                            />
+                        </li>
+                        <li class="carousel-slide">
+                            <img
+                                src="/about/NBA Player/Irving.png"
+                                alt="Kyrie Irving"
+                                class="carousel-image"
+                                data-title="Kyrie Irving"
                             />
                         </li>
                     </ul>
@@ -140,133 +217,147 @@ const pageTitle = "About Me";
 
 <script>
     // Carousel Logic - Infinite Loop with Clones
-    const track = document.querySelector(".carousel-track") as HTMLElement;
-    let slides = Array.from(track.children) as HTMLElement[];
-    const nextButton = document.querySelector(".next-btn");
-    const prevButton = document.querySelector(".prev-btn");
-    const caption = document.querySelector(".carousel-caption") as HTMLElement;
+    // Using a separate scope for each carousel on the page
+    const carousels = document.querySelectorAll(".favorites-section");
 
-    if (track && slides.length > 0) {
-        // Clone first and last slides
-        const firstClone = slides[0].cloneNode(true) as HTMLElement;
-        const lastClone = slides[slides.length - 1].cloneNode(
-            true,
+    carousels.forEach((carouselSection) => {
+        const track = carouselSection.querySelector(
+            ".carousel-track",
+        ) as HTMLElement;
+        const nextButton = carouselSection.querySelector(".next-btn");
+        const prevButton = carouselSection.querySelector(".prev-btn");
+        const caption = carouselSection.querySelector(
+            ".carousel-caption",
         ) as HTMLElement;
 
-        firstClone.classList.add("clone-first");
-        lastClone.classList.add("clone-last");
+        if (track && track.children.length > 0) {
+            let slides = Array.from(track.children) as HTMLElement[];
 
-        // Append/Prepend clones
-        track.appendChild(firstClone);
-        track.insertBefore(lastClone, slides[0]);
+            // Clone first and last slides
+            const firstClone = slides[0].cloneNode(true) as HTMLElement;
+            const lastClone = slides[slides.length - 1].cloneNode(
+                true,
+            ) as HTMLElement;
 
-        // Re-query slides to include clones
-        slides = Array.from(track.children) as HTMLElement[];
+            firstClone.classList.add("clone-first");
+            lastClone.classList.add("clone-last");
 
-        // Use let for responsiveness
-        let slideWidth = slides[0].getBoundingClientRect().width;
+            // Append/Prepend clones
+            track.appendChild(firstClone);
+            track.insertBefore(lastClone, slides[0]);
 
-        // Initial state: Show the real first slide (index 1)
-        let currentIndex = 1;
+            // Re-query slides to include clones
+            slides = Array.from(track.children) as HTMLElement[];
 
-        // Helper to update caption
-        const updateCaption = (index: number) => {
-            if (!caption) return;
-            const img = slides[index].querySelector("img");
-            if (img && img.dataset.title) {
-                caption.textContent = img.dataset.title;
-                // Trigger a subtle animation
-                caption.classList.remove("fade-text");
-                void caption.offsetWidth; // trigger reflow
-                caption.classList.add("fade-text");
-            }
-        };
+            // Use let for responsiveness
+            let slideWidth = slides[0].getBoundingClientRect().width;
 
-        // Arrange the slides next to one another
-        const setSlidePosition = (slide: HTMLElement, index: number) => {
-            slide.style.left = slideWidth * index + "px";
-        };
-        slides.forEach(setSlidePosition);
+            // Initial state: Show the real first slide (index 1)
+            let currentIndex = 1;
 
-        // Move to initial position without animation
-        track.style.transition = "none";
-        track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
-        slides[currentIndex].classList.add("current-slide");
-        updateCaption(currentIndex);
+            // Helper to update caption
+            const updateCaption = (index: number) => {
+                if (!caption) return;
+                const img = slides[index].querySelector("img");
+                if (img && img.dataset.title) {
+                    caption.textContent = img.dataset.title;
+                    // Trigger a subtle animation
+                    caption.classList.remove("fade-text");
+                    void caption.offsetWidth; // trigger reflow
+                    caption.classList.add("fade-text");
+                }
+            };
 
-        const moveToSlide = (index: number, animate = true) => {
-            if (animate) {
-                track.style.transition =
-                    "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
-            } else {
-                track.style.transition = "none";
-            }
-            track.style.transform = `translateX(-${slideWidth * index}px)`;
-
-            // Update active class
-            track
-                .querySelector(".current-slide")
-                ?.classList.remove("current-slide");
-            slides[index].classList.add("current-slide");
-
-            currentIndex = index;
-            updateCaption(index);
-        };
-
-        // click left
-        prevButton?.addEventListener("click", () => {
-            if (currentIndex <= 0) return; // Wait for reset
-            moveToSlide(currentIndex - 1);
-        });
-
-        // click right
-        nextButton?.addEventListener("click", () => {
-            if (currentIndex >= slides.length - 1) return; // Wait for reset
-            moveToSlide(currentIndex + 1);
-        });
-
-        // Handle Loop Reset on Transition End
-        track.addEventListener("transitionend", (e) => {
-            if (e.propertyName !== "transform") return;
-
-            if (slides[currentIndex].classList.contains("clone-last")) {
-                // We are at the clone of the last slide (index 0).
-                // Jump to the real last slide (index slides.length - 2).
-                track.style.transition = "none";
-                currentIndex = slides.length - 2;
-                track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
-
-                track
-                    .querySelector(".current-slide")
-                    ?.classList.remove("current-slide");
-                slides[currentIndex].classList.add("current-slide");
-            }
-
-            if (slides[currentIndex].classList.contains("clone-first")) {
-                // We are at the clone of the first slide (last index).
-                // Jump to the real first slide (index 1).
-                track.style.transition = "none";
-                currentIndex = 1;
-                track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
-
-                track
-                    .querySelector(".current-slide")
-                    ?.classList.remove("current-slide");
-                slides[currentIndex].classList.add("current-slide");
-            }
-        });
-
-        // Resize handler to fix positions
-        window.addEventListener("resize", () => {
-            slideWidth = slides[0].getBoundingClientRect().width;
-            slides.forEach((slide, index) => {
+            // Arrange the slides next to one another
+            const setSlidePosition = (slide: HTMLElement, index: number) => {
                 slide.style.left = slideWidth * index + "px";
-            });
-            // Update transform to stay on current slide
+            };
+            slides.forEach(setSlidePosition);
+
+            // Move to initial position without animation
             track.style.transition = "none";
-            track.style.transform = `translateX(-${slideWidth * currentIndex}px)`;
-        });
-    }
+            track.style.transform = `translateX(-${
+                slideWidth * currentIndex
+            }px)`;
+            slides[currentIndex].classList.add("current-slide");
+            updateCaption(currentIndex);
+
+            const moveToSlide = (index: number, animate = true) => {
+                if (animate) {
+                    track.style.transition =
+                        "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
+                } else {
+                    track.style.transition = "none";
+                }
+                track.style.transform = `translateX(-${slideWidth * index}px)`;
+
+                // Update active class
+                track
+                    .querySelector(".current-slide")
+                    ?.classList.remove("current-slide");
+                slides[index].classList.add("current-slide");
+
+                currentIndex = index;
+                updateCaption(index);
+            };
+
+            // click left
+            prevButton?.addEventListener("click", () => {
+                if (currentIndex <= 0) return; // Wait for reset
+                moveToSlide(currentIndex - 1);
+            });
+
+            // click right
+            nextButton?.addEventListener("click", () => {
+                if (currentIndex >= slides.length - 1) return; // Wait for reset
+                moveToSlide(currentIndex + 1);
+            });
+
+            // Handle Loop Reset on Transition End
+            track.addEventListener("transitionend", (e) => {
+                if (e.propertyName !== "transform") return;
+
+                if (slides[currentIndex].classList.contains("clone-last")) {
+                    track.style.transition = "none";
+                    currentIndex = slides.length - 2;
+                    track.style.transform = `translateX(-${
+                        slideWidth * currentIndex
+                    }px)`;
+
+                    track
+                        .querySelector(".current-slide")
+                        ?.classList.remove("current-slide");
+                    slides[currentIndex].classList.add("current-slide");
+                }
+
+                if (slides[currentIndex].classList.contains("clone-first")) {
+                    track.style.transition = "none";
+                    currentIndex = 1;
+                    track.style.transform = `translateX(-${
+                        slideWidth * currentIndex
+                    }px)`;
+
+                    track
+                        .querySelector(".current-slide")
+                        ?.classList.remove("current-slide");
+                    slides[currentIndex].classList.add("current-slide");
+                }
+            });
+
+            // Resize handler to fix positions
+            window.addEventListener("resize", () => {
+                slideWidth = slides[0].getBoundingClientRect().width;
+                slides.forEach((slide, index) => {
+                    slide.style.left = slideWidth * index + "px";
+                });
+                // Update transform to stay on current slide
+                track.style.transition = "none";
+                track.style.transform = `translateX(-${
+                    slideWidth * currentIndex
+                }px)`;
+            });
+        }
+    });
 </script>
 
 <style>
@@ -301,6 +392,9 @@ const pageTitle = "About Me";
     }
     .delay-2 {
         animation-delay: 0.4s;
+    }
+    .delay-3 {
+        animation-delay: 0.6s;
     }
 
     /* Header Section */
@@ -563,7 +657,7 @@ const pageTitle = "About Me";
 
     .carousel-track-container {
         height: 100%;
-        width: 80%; /* Main carousel width */
+        width: 90%; /* Main carousel width */
         margin: 0 auto;
         position: relative;
         overflow: hidden;

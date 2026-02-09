@@ -4,7 +4,12 @@
 
 <footer class="footer">
     <div class="container footer-content">
-        <p>&copy; 2026 Designed by Qi Kang</p>
+        <p style="margin-bottom: 0%;">&copy; 2026 Designed by Qi Kang</p>
+        <p class="disclaimer">
+            This website is a non-profit personal website. All image copyrights
+            belong to their original authors/agencies. If there is any
+            infringement, please contact kangq994@gmail.com to request removal.
+        </p>
     </div>
 </footer>
 
@@ -21,7 +26,15 @@
 
     .footer-content {
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
+        gap: 0.5rem;
+    }
+
+    .disclaimer {
+        font-size: 0.75rem;
+        opacity: 0.8;
+        max-width: 90%;
     }
 </style>
