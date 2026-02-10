@@ -201,109 +201,153 @@ export default function Comments({ postId }: CommentsProps) {
 
       <style>{`
         .comments-section {
-          margin-top: 3rem;
+          margin-top: 4rem;
           padding-top: 2rem;
-          border-top: 1px solid var(--color-border, #eee);
+          border-top: 1px solid var(--color-border);
         }
         .comments-section h3 {
-          margin-bottom: 1.5rem;
-          font-size: 1.5rem;
+          margin-bottom: 2rem;
+          font-size: 1.75rem;
+          font-weight: 600;
+          letter-spacing: -0.02em;
+          color: var(--color-text-main);
         }
         .comment-form {
-          margin-bottom: 2rem;
+          margin-bottom: 3rem;
           display: flex;
           flex-direction: column;
           gap: 1rem;
         }
         textarea {
           width: 100%;
-          min-height: 100px;
+          min-height: 120px;
           padding: 1rem;
-          border: 1px solid var(--color-border, #ccc);
-          border-radius: 8px;
-          background: var(--color-bg-secondary, #fff);
-          color: var(--color-text-main, #333);
+          border: 1px solid var(--color-border);
+          border-radius: 12px;
+          background: var(--color-bg-secondary);
+          color: var(--color-text-main);
           font-family: inherit;
+          font-size: 1rem;
+          line-height: 1.5;
           resize: vertical;
+          transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        textarea:focus {
+          outline: none;
+          border-color: var(--color-accent);
+          box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
+        }
+        .reply-form {
+          margin-top: 1rem;
+          margin-bottom: 1rem;
         }
         .reply-form textarea {
-            min-height: 60px;
-            margin-bottom: 0.5rem;
+          min-height: 80px;
+          margin-bottom: 0.5rem;
+          font-size: 0.95rem;
         }
         .submit-button {
           align-self: flex-start;
-          padding: 0.75rem 1.5rem;
-          background: var(--color-accent, #333);
+          padding: 0.6rem 1.25rem;
+          background: var(--color-accent);
           color: white;
           border: none;
-          border-radius: 6px;
+          border-radius: 999px;
           cursor: pointer;
+          font-size: 0.9rem;
           font-weight: 500;
-          transition: opacity 0.2s;
+          transition: all 0.2s ease;
         }
-        button:hover {
+        .submit-button:hover {
+          background: var(--color-accent); /* You might want a slightly darker shade or opacity change here, but standard Apple is usually just consistent or slight opacity */
           opacity: 0.9;
+          transform: translateY(-1px);
         }
-        button:disabled {
-          opacity: 0.7;
+        .submit-button:disabled {
+          opacity: 0.5;
           cursor: not-allowed;
+          transform: none;
         }
         .comment-list {
           display: flex;
           flex-direction: column;
-          gap: 1.5rem;
+          gap: 2rem;
         }
         .comment {
-          padding: 1rem;
-          background: var(--color-bg-secondary, #f9f9f9);
-          border-radius: 8px;
-          border: 1px solid var(--color-border, #eee);
+          /* Clean design: no box, just content */
+          padding: 0;
+          background: transparent;
+          border: none;
         }
         .replies-list {
-            margin-top: 1rem;
-            margin-left: 1.5rem;
-            padding-left: 1rem;
-            border-left: 2px solid var(--color-border, #eee);
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+          margin-top: 1.5rem;
+          margin-left: 1.5rem;
+          padding-left: 1.5rem;
+          border-left: 2px solid var(--color-border);
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        .comment-content-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
         }
         .comment-content {
-          margin: 0 0 0.5rem 0;
-          line-height: 1.5;
+          margin: 0;
+          font-size: 1rem;
+          line-height: 1.6;
+          color: var(--color-text-main);
         }
         .comment-footer {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          margin-top: 0.25rem;
         }
         .comment-date {
-          color: var(--color-text-secondary, #888);
-          font-size: 0.85rem;
+          color: var(--color-text-secondary);
+          font-size: 0.8rem;
+          font-weight: 500;
         }
         .reply-button {
-            background: none;
-            border: none;
-            color: var(--color-accent, #333);
-            cursor: pointer;
-            font-size: 0.85rem;
-            padding: 0;
-            text-decoration: underline;
+          background: none;
+          border: none;
+          color: var(--color-accent);
+          cursor: pointer;
+          font-size: 0.8rem;
+          font-weight: 500;
+          padding: 0;
+          transition: opacity 0.2s;
+        }
+        .reply-button:hover {
+          opacity: 0.8;
+          text-decoration: underline;
         }
         .reply-actions {
-            display: flex;
-            gap: 0.5rem;
+          display: flex;
+          gap: 0.75rem;
+          margin-top: 0.5rem;
         }
         .cancel-button {
-            padding: 0.5rem 1rem;
-            background: transparent;
-            border: 1px solid var(--color-border, #ccc);
-            border-radius: 6px;
-            cursor: pointer;
+          padding: 0.6rem 1.25rem;
+          background: transparent;
+          color: var(--color-text-secondary);
+          border: 1px solid var(--color-border);
+          border-radius: 999px;
+          cursor: pointer;
+          font-size: 0.9rem;
+          font-weight: 500;
+          transition: all 0.2s;
+        }
+        .cancel-button:hover {
+          background: var(--color-bg-tertiary);
+          color: var(--color-text-main);
         }
         .error-message {
-          color: red;
+          color: #ff3b30; /* Apple Red */
           margin-bottom: 1rem;
+          font-size: 0.9rem;
         }
       `}</style>
     </div>
