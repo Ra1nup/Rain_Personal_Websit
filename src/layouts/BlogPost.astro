@@ -1,0 +1,159 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+    title: string;
+    description: string;
+    pubDate: Date;
+    updatedDate?: Date;
+    heroImage?: string;
+}
+
+const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+    <main>
+        <article>
+            <div class="hero-image fade-in">
+                {
+                    heroImage && (
+                        <img width={1020} height={510} src={heroImage} alt="" />
+                    )
+                }
+            </div>
+            <div class="prose">
+                <a href="/blog" class="back-link fade-in">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        ><line x1="19" y1="12" x2="5" y2="12"></line><polyline
+                            points="12 19 5 12 12 5"></polyline></svg
+                    >
+                    Back to Blog
+                </a>
+                <div class="title fade-in">
+                    <div class="date">
+                        {
+                            pubDate.toLocaleDateString("en-us", {
+                                year: "numeric",
+                                month: "short",
+                                day: "numeric",
+                            })
+                        }
+                        {
+                            updatedDate && (
+                                <div class="last-updated-on">
+                                    Last updated on{" "}
+                                    {updatedDate.toLocaleDateString("en-us", {
+                                        year: "numeric",
+                                        month: "short",
+                                        day: "numeric",
+                                    })}
+                                </div>
+                            )
+                        }
+                    </div>
+                    <h1>{title}</h1>
+                    <hr />
+                </div>
+                <div class="post-content fade-in">
+                    <slot />
+                </div>
+            </div>
+        </article>
+    </main>
+</BaseLayout>
+
+<style>
+    main {
+        width: calc(100% - 2em);
+        max-width: 100%;
+        margin: 0;
+    }
+    /* Animation Styles */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .fade-in {
+        opacity: 0;
+        animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    .hero-image {
+        width: 100%;
+        animation-delay: 0.1s;
+    }
+
+    .title {
+        margin-bottom: 1em;
+        padding: 1em 0;
+        text-align: center;
+        line-height: 1;
+        animation-delay: 0.3s;
+    }
+
+    .post-content {
+        animation-delay: 0.5s;
+    }
+
+    .hero-image img {
+        display: block;
+        margin: 0 auto;
+        border-radius: 12px;
+        box-shadow: var(--box-shadow);
+    }
+    .prose {
+        width: 720px;
+        max-width: calc(100% - 2em);
+        margin: auto;
+        padding: 1em;
+        color: var(--color-text-main);
+    }
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--color-text-secondary);
+        text-decoration: none;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+        transition:
+            color 0.2s ease,
+            transform 0.2s ease;
+    }
+    .back-link:hover {
+        color: var(--color-accent);
+        transform: translateX(-4px);
+    }
+    .back-link svg {
+        width: 1.2em;
+        height: 1.2em;
+    }
+    .title h1 {
+        margin: 0 0 0.5em 0;
+    }
+    .date {
+        margin-bottom: 0.5em;
+        color: var(--color-text-secondary);
+    }
+    .last-updated-on {
+        font-style: italic;
+    }
+</style>
