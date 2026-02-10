@@ -23,7 +23,6 @@ import ThemeToggle from "./ThemeToggle.astro";
             <a href="/about">About</a>
             <a href="#portfolio">Portfolio</a>
             <a href="/blog">Blog</a>
-            <a href="#board">Board</a>
             <a href="/contact">Contact</a>
         </div>
 
@@ -80,11 +79,10 @@ import ThemeToggle from "./ThemeToggle.astro";
     }
 
     .theme-toggle-wrapper {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        display: none; /* Hidden on mobile by default, or maybe visible if space allows? Let's hide on mobile first to match "simple" */
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        margin-right: 16px;
     }
 
     /* Desktop Styles */
@@ -95,7 +93,7 @@ import ThemeToggle from "./ThemeToggle.astro";
         }
 
         .theme-toggle-wrapper {
-            display: block;
+            margin: 0;
         }
     }
 

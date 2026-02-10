@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 import type { CollectionEntry } from "astro:content";
-
+import { getCollection } from "astro:content";
 import Comments from "../components/Comments";
 
 interface Props {
@@ -82,7 +82,7 @@ const { title, description, pubDate, updatedDate, heroImage, slug } =
     main {
         width: calc(100% - 2em);
         max-width: 100%;
-        margin: 0;
+        margin: 0 auto;
     }
     /* Animation Styles */
     @keyframes fadeIn {
@@ -104,6 +104,7 @@ const { title, description, pubDate, updatedDate, heroImage, slug } =
     .hero-image {
         width: 100%;
         animation-delay: 0.1s;
+        text-align: center;
     }
 
     .title {
@@ -123,6 +124,20 @@ const { title, description, pubDate, updatedDate, heroImage, slug } =
         margin: 0 auto;
         border-radius: 12px;
         box-shadow: var(--box-shadow);
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+    @media (max-width: 720px) {
+        .hero-image img {
+            aspect-ratio: 16 / 9;
+        }
+    }
+    @media (min-width: 720px) {
+        .hero-image img {
+            aspect-ratio: 2 / 1;
+            width: 1020px;
+        }
     }
     .prose {
         width: 960px;
@@ -130,6 +145,12 @@ const { title, description, pubDate, updatedDate, heroImage, slug } =
         margin: auto;
         padding: 1em;
         color: var(--color-text-main);
+    }
+    .prose img {
+        display: block;
+        margin: 0 auto;
+        max-width: 100%;
+        height: auto;
     }
     .back-link {
         display: inline-flex;
