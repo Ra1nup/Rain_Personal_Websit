@@ -44,15 +44,15 @@
 - [x] **依赖安装**: 集成 `lucide-vue-next` 图标库
 - [x] **视觉识别**: 设计并配置 Logo (`logo.png`, `favicon.svg`)
 - [x] **全局布局**: 实现磨砂玻璃效果的 Header 与极简 Footer
-- [ ] **首页开发**: 包含 Hero 区域与动态欢迎语
-- [ ] **关于页**: 实现 Bento Grid 布局展示个人简介
-- [ ] **联系页**: 简洁的联系方式列表
+- [x] **首页开发**: 包含 Hero 区域与动态欢迎语
+- [x] **关于页**: 实现 Bento Grid 布局展示个人简介
+- [x] **联系页**: 简洁的联系方式列表
 
 ### Phase 2: 内容与优化 (Future)
-- [ ] 集成 Markdown 博客系统
-- [ ] 添加深色模式 (Dark Mode)
+- [x] 集成 Markdown 博客系统
+- [x] 添加深色模式 (Dark Mode)
 - [ ] 增加 SEO 元数据优化
-- [ ] 部署上线
+- [x] 部署上线
 
 ## 📄 License
 

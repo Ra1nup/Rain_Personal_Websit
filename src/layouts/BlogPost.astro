@@ -2,15 +2,19 @@
 import BaseLayout from "./BaseLayout.astro";
 import type { CollectionEntry } from "astro:content";
 
+import Comments from "../components/Comments";
+
 interface Props {
     title: string;
     description: string;
     pubDate: Date;
     updatedDate?: Date;
     heroImage?: string;
+    slug?: string;
 }
 
-const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, slug } =
+    Astro.props;
 ---
 
 <BaseLayout title={title} description={description}>
@@ -68,6 +72,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
                 <div class="post-content fade-in">
                     <slot />
                 </div>
+                {slug && <Comments client:visible postId={slug} />}
             </div>
         </article>
     </main>
@@ -120,7 +125,7 @@ const { title, description, pubDate, updatedDate, heroImage } = Astro.props;
         box-shadow: var(--box-shadow);
     }
     .prose {
-        width: 720px;
+        width: 960px;
         max-width: calc(100% - 2em);
         margin: auto;
         padding: 1em;
