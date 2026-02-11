@@ -8,12 +8,64 @@ interface Comment {
   content: string;
   created_at: string;
   parent_id?: string | null;
+  author_name: string;
+  author_website?: string;
+  is_admin?: boolean;
 }
 
 interface CommentsProps {
   postId: string;
 }
 
+interface UserInputsProps {
+  authorName: string;
+  setAuthorName: (value: string) => void;
+  authorEmail: string;
+  setAuthorEmail: (value: string) => void;
+  authorWebsite: string;
+  setAuthorWebsite: (value: string) => void;
+}
+
+const UserInputs = ({
+  authorName,
+  setAuthorName,
+  authorEmail,
+  setAuthorEmail,
+  authorWebsite,
+  setAuthorWebsite
+}: UserInputsProps) => (
+  <div className="user-inputs">
+    <div className="input-group">
+      <input
+        type="text"
+        placeholder="Name *"
+        value={authorName}
+        onChange={(e) => setAuthorName(e.target.value)}
+        required
+        className="user-input"
+      />
+    </div>
+    <div className="input-group">
+      <input
+        type="email"
+        placeholder="Email *"
+        value={authorEmail}
+        onChange={(e) => setAuthorEmail(e.target.value)}
+        required
+        className="user-input"
+      />
+    </div>
+    <div className="input-group">
+      <input
+        type="url"
+        placeholder="Website"
+        value={authorWebsite}
+        onChange={(e) => setAuthorWebsite(e.target.value)}
+        className="user-input"
+      />
+    </div>
+  </div>
+);
 
 interface CommentItemProps {
   comment: Comment & { replies: any[] };
@@ -22,6 +74,13 @@ interface CommentItemProps {
   replyContent: string;
   setReplyContent: (content: string) => void;
   handleSubmit: (e: React.FormEvent, parentId: string | null) => void;
+  // User input props for reply form
+  authorName: string;
+  setAuthorName: (value: string) => void;
+  authorEmail: string;
+  setAuthorEmail: (value: string) => void;
+  authorWebsite: string;
+  setAuthorWebsite: (value: string) => void;
 }
 
 const CommentItem = ({
@@ -30,61 +89,106 @@ const CommentItem = ({
   setReplyingTo,
   replyContent,
   setReplyContent,
-  handleSubmit
-}: CommentItemProps) => (
-  <div className="comment">
-    <div className="comment-content-wrapper">
-      <p className="comment-content">{comment.content}</p>
-      <div className="comment-footer">
-        <small className="comment-date">
-          {new Date(comment.created_at).toLocaleString()}
-        </small>
-        <button
-          className="reply-button"
-          onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
-        >
-          Reply
-        </button>
-      </div>
-    </div>
+  handleSubmit,
+  authorName,
+  setAuthorName,
+  authorEmail,
+  setAuthorEmail,
+  authorWebsite,
+  setAuthorWebsite
+}: CommentItemProps) => {
 
-    {replyingTo === comment.id && (
-      <form onSubmit={(e) => handleSubmit(e, comment.id)} className="reply-form">
-        <textarea
-          value={replyContent}
-          onChange={(e) => setReplyContent(e.target.value)}
-          placeholder="Write a reply..."
-          required
-          autoFocus
-        />
-        <div className="reply-actions">
-          <button type="button" onClick={() => setReplyingTo(null)} className="cancel-button">
-            Cancel
-          </button>
-          <button type="submit" className="submit-button">
+  // Helper to format date
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  return (
+    <div className={`comment ${comment.is_admin ? 'admin-comment' : ''}`}>
+      <div className="comment-content-wrapper">
+        <div className="comment-header">
+          {comment.author_website ? (
+            <a href={comment.author_website} target="_blank" rel="noopener noreferrer" className="comment-author">
+              {comment.author_name}
+            </a>
+          ) : (
+            <span className="comment-author">{comment.author_name}</span>
+          )}
+          {comment.is_admin && <span className="admin-badge">Admin</span>}
+          <span className="comment-date">{formatDate(comment.created_at)}</span>
+        </div>
+
+        <p className="comment-text">{comment.content}</p>
+
+        <div className="comment-actions">
+          <button
+            className="reply-button"
+            onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
+          >
             Reply
           </button>
         </div>
-      </form>
-    )}
-
-    {comment.replies.length > 0 && (
-      <div className="replies-list">
-        {comment.replies.map(reply => (
-          <CommentItem
-            key={reply.id}
-            comment={reply}
-            replyingTo={replyingTo}
-            setReplyingTo={setReplyingTo}
-            replyContent={replyContent}
-            setReplyContent={setReplyContent}
-            handleSubmit={handleSubmit}
-          />
-        ))}
       </div>
-    )}
-  </div>
-);
+
+      {replyingTo === comment.id && (
+        <form onSubmit={(e) => handleSubmit(e, comment.id)} className="reply-form">
+          <UserInputs
+            authorName={authorName}
+            setAuthorName={setAuthorName}
+            authorEmail={authorEmail}
+            setAuthorEmail={setAuthorEmail}
+            authorWebsite={authorWebsite}
+            setAuthorWebsite={setAuthorWebsite}
+          />
+          <textarea
+            value={replyContent}
+            onChange={(e) => setReplyContent(e.target.value)}
+            placeholder="Write a reply..."
+            required
+            autoFocus
+            className="reply-textarea"
+          />
+          <div className="reply-actions">
+            <button type="button" onClick={() => setReplyingTo(null)} className="cancel-button">
+              Cancel
+            </button>
+            <button type="submit" className="submit-button">
+              Reply
+            </button>
+          </div>
+        </form>
+      )}
+
+      {comment.replies.length > 0 && (
+        <div className="replies-list">
+          {comment.replies.map(reply => (
+            <CommentItem
+              key={reply.id}
+              comment={reply}
+              replyingTo={replyingTo}
+              setReplyingTo={setReplyingTo}
+              replyContent={replyContent}
+              setReplyContent={setReplyContent}
+              handleSubmit={handleSubmit}
+              authorName={authorName}
+              setAuthorName={setAuthorName}
+              authorEmail={authorEmail}
+              setAuthorEmail={setAuthorEmail}
+              authorWebsite={authorWebsite}
+              setAuthorWebsite={setAuthorWebsite}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function Comments({ postId }: CommentsProps) {
   const [comments, setComments] = useState<Comment[]>([]);
@@ -94,8 +198,28 @@ export default function Comments({ postId }: CommentsProps) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // User details state
+  const [authorName, setAuthorName] = useState('');
+  const [authorEmail, setAuthorEmail] = useState('');
+  const [authorWebsite, setAuthorWebsite] = useState('');
+  const [saveInfo, setSaveInfo] = useState(false);
+  const [notifyReply, setNotifyReply] = useState(false);
+
   useEffect(() => {
     fetchComments();
+
+    // Load saved user info
+    const savedName = localStorage.getItem('comment_author_name');
+    const savedEmail = localStorage.getItem('comment_author_email');
+    const savedWebsite = localStorage.getItem('comment_author_website');
+    const savedSaveInfo = localStorage.getItem('comment_save_info');
+
+    if (savedSaveInfo === 'true') {
+      setSaveInfo(true);
+      if (savedName) setAuthorName(savedName);
+      if (savedEmail) setAuthorEmail(savedEmail);
+      if (savedWebsite) setAuthorWebsite(savedWebsite);
+    }
   }, [postId]);
 
   async function fetchComments() {
@@ -105,7 +229,7 @@ export default function Comments({ postId }: CommentsProps) {
         .from('comments')
         .select('*')
         .eq('post_id', postId)
-        .order('created_at', { ascending: true }); // Order by oldest first for threads
+        .order('created_at', { ascending: true });
 
       if (error) throw error;
       setComments(data || []);
@@ -120,12 +244,42 @@ export default function Comments({ postId }: CommentsProps) {
   async function handleSubmit(e: React.FormEvent, parentId: string | null = null) {
     e.preventDefault();
     const content = parentId ? replyContent : newComment;
+
     if (!content.trim()) return;
+    if (!authorName.trim()) {
+      alert('Please enter your name');
+      return;
+    }
+    if (!authorEmail.trim()) {
+      alert('Please enter your email');
+      return;
+    }
+
+    // Save info if checked
+    if (saveInfo) {
+      localStorage.setItem('comment_author_name', authorName);
+      localStorage.setItem('comment_author_email', authorEmail);
+      localStorage.setItem('comment_author_website', authorWebsite);
+      localStorage.setItem('comment_save_info', 'true');
+    } else {
+      localStorage.removeItem('comment_author_name');
+      localStorage.removeItem('comment_author_email');
+      localStorage.removeItem('comment_author_website');
+      localStorage.setItem('comment_save_info', 'false');
+    }
 
     try {
       const { error } = await supabase
         .from('comments')
-        .insert([{ post_id: postId, content: content, parent_id: parentId }]);
+        .insert([{
+          post_id: postId,
+          content: content,
+          parent_id: parentId,
+          author_name: authorName,
+          author_email: authorEmail,
+          author_website: authorWebsite,
+          notify_reply: notifyReply
+        }]);
 
       if (error) throw error;
 
@@ -163,29 +317,63 @@ export default function Comments({ postId }: CommentsProps) {
     return roots.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   };
 
-
-
   return (
     <div className="comments-section">
-      <h3>Comments</h3>
+      <h3>{comments.length} Comments</h3>
 
-      <form onSubmit={(e) => handleSubmit(e)} className="comment-form">
-        <textarea
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
-          placeholder="Leave a comment..."
-          required
-        />
-        <button type="submit" disabled={loading} className="submit-button">
-          {loading ? 'Posting...' : 'Post Comment'}
-        </button>
-      </form>
+      <div className="new-comment-section">
+        <h4 className="section-title">Leave a Comment</h4>
+        <p className="section-subtitle">Your email address will not be published. Required fields are marked *</p>
 
-      {error && <p className="error-message">Error loading comments: {error}</p>}
+        <form onSubmit={(e) => handleSubmit(e)} className="comment-form">
+          <UserInputs
+            authorName={authorName}
+            setAuthorName={setAuthorName}
+            authorEmail={authorEmail}
+            setAuthorEmail={setAuthorEmail}
+            authorWebsite={authorWebsite}
+            setAuthorWebsite={setAuthorWebsite}
+          />
+
+          <div className="checkbox-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={notifyReply}
+                onChange={(e) => setNotifyReply(e.target.checked)}
+              />
+              Notify me of new posts by email.
+            </label>
+          </div>
+
+          <textarea
+            value={newComment}
+            onChange={(e) => setNewComment(e.target.value)}
+            placeholder="Add a comment... *"
+            required
+            className="main-textarea"
+          />
+
+          <div className="checkbox-group">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                checked={saveInfo}
+                onChange={(e) => setSaveInfo(e.target.checked)}
+              />
+              Save my name, email, and website in this browser for the next time I comment.
+            </label>
+          </div>
+
+          <button type="submit" disabled={loading} className="submit-button">
+            {loading ? 'Posting...' : 'Post Comment'}
+          </button>
+        </form>
+      </div>
 
       <div className="comment-list">
         {loading && <p>Loading comments...</p>}
-        {!loading && comments.length === 0 && <p>No comments yet. Be the first to verify!</p>}
+        {!loading && comments.length === 0 && <p>No comments yet.</p>}
         {buildCommentTree(comments).map((comment) => (
           <CommentItem
             key={comment.id}
@@ -195,6 +383,12 @@ export default function Comments({ postId }: CommentsProps) {
             replyContent={replyContent}
             setReplyContent={setReplyContent}
             handleSubmit={handleSubmit}
+            authorName={authorName}
+            setAuthorName={setAuthorName}
+            authorEmail={authorEmail}
+            setAuthorEmail={setAuthorEmail}
+            authorWebsite={authorWebsite}
+            setAuthorWebsite={setAuthorWebsite}
           />
         ))}
       </div>
@@ -205,22 +399,40 @@ export default function Comments({ postId }: CommentsProps) {
           padding-top: 2rem;
           border-top: 1px solid var(--color-border);
         }
-        .comments-section h3 {
-          margin-bottom: 2rem;
-          font-size: 1.75rem;
+        .section-title {
+          font-size: 1.25rem;
           font-weight: 600;
-          letter-spacing: -0.02em;
+          margin-bottom: 0.5rem;
           color: var(--color-text-main);
         }
-        .comment-form {
-          margin-bottom: 3rem;
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
+        .section-subtitle {
+          font-size: 0.9rem;
+          color: var(--color-text-secondary);
+          margin-bottom: 1.5rem;
         }
-        textarea {
+        .user-inputs {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1rem;
+          margin-bottom: 1rem;
+        }
+        .user-input {
           width: 100%;
-          min-height: 120px;
+          padding: 0.8rem 1rem;
+          border: 1px solid var(--color-border);
+          border-radius: 8px;
+          background: var(--color-bg-secondary);
+          color: var(--color-text-main);
+          font-size: 0.95rem;
+          transition: border-color 0.2s;
+        }
+        .user-input:focus {
+          outline: none;
+          border-color: var(--color-accent);
+        }
+        .main-textarea {
+          width: 100%;
+          min-height: 150px;
           padding: 1rem;
           border: 1px solid var(--color-border);
           border-radius: 12px;
@@ -228,128 +440,144 @@ export default function Comments({ postId }: CommentsProps) {
           color: var(--color-text-main);
           font-family: inherit;
           font-size: 1rem;
-          line-height: 1.5;
           resize: vertical;
-          transition: border-color 0.2s, box-shadow 0.2s;
-        }
-        textarea:focus {
-          outline: none;
-          border-color: var(--color-accent);
-          box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.1);
-        }
-        .reply-form {
-          margin-top: 1rem;
           margin-bottom: 1rem;
         }
-        .reply-form textarea {
-          min-height: 80px;
-          margin-bottom: 0.5rem;
-          font-size: 0.95rem;
+        .main-textarea:focus {
+          outline: none;
+          border-color: var(--color-accent);
+        }
+        .checkbox-group {
+          margin-bottom: 1rem;
+        }
+        .checkbox-label {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.9rem;
+          color: var(--color-text-secondary);
+          cursor: pointer;
         }
         .submit-button {
-          align-self: flex-start;
-          padding: 0.6rem 1.25rem;
+          padding: 0.8rem 1.5rem;
           background: var(--color-accent);
           color: white;
           border: none;
-          border-radius: 999px;
-          cursor: pointer;
-          font-size: 0.9rem;
+          border-radius: 8px;
           font-weight: 500;
-          transition: all 0.2s ease;
+          cursor: pointer;
+          transition: opacity 0.2s;
         }
         .submit-button:hover {
-          background: var(--color-accent); /* You might want a slightly darker shade or opacity change here, but standard Apple is usually just consistent or slight opacity */
           opacity: 0.9;
-          transform: translateY(-1px);
         }
         .submit-button:disabled {
           opacity: 0.5;
           cursor: not-allowed;
-          transform: none;
         }
+
+        /* Comment List */
         .comment-list {
+          margin-top: 3rem;
           display: flex;
           flex-direction: column;
           gap: 2rem;
         }
-        .comment {
-          /* Clean design: no box, just content */
-          padding: 0;
-          background: transparent;
-          border: none;
-        }
-        .replies-list {
-          margin-top: 1.5rem;
-          margin-left: 1.5rem;
-          padding-left: 1.5rem;
-          border-left: 2px solid var(--color-border);
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-        }
         .comment-content-wrapper {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
+          padding-bottom: 1rem;
         }
-        .comment-content {
-          margin: 0;
-          font-size: 1rem;
-          line-height: 1.6;
-          color: var(--color-text-main);
-        }
-        .comment-footer {
+        .comment-header {
           display: flex;
           align-items: center;
-          gap: 1rem;
-          margin-top: 0.25rem;
+          gap: 0.75rem;
+          margin-bottom: 0.5rem;
+        }
+        .comment-author {
+          font-weight: 600;
+          color: var(--color-text-main);
+          text-decoration: none;
+        }
+        .comment-author:hover {
+          text-decoration: underline;
+        }
+        .admin-badge {
+          background: var(--color-accent);
+          color: white;
+          font-size: 0.7rem;
+          padding: 0.1rem 0.4rem;
+          border-radius: 4px;
+          font-weight: 600;
         }
         .comment-date {
+          font-size: 0.85rem;
           color: var(--color-text-secondary);
-          font-size: 0.8rem;
-          font-weight: 500;
+        }
+        .comment-text {
+          margin-bottom: 0.5rem;
+          line-height: 1.6;
+          color: var(--color-text-main);
         }
         .reply-button {
           background: none;
           border: none;
-          color: var(--color-accent);
+          color: var(--color-text-secondary);
           cursor: pointer;
-          font-size: 0.8rem;
-          font-weight: 500;
+          font-size: 0.85rem;
           padding: 0;
-          transition: opacity 0.2s;
+          text-decoration: underline;
         }
         .reply-button:hover {
-          opacity: 0.8;
-          text-decoration: underline;
+          color: var(--color-accent);
+        }
+        .replies-list {
+          margin-left: 1.5rem;
+          padding-left: 1.5rem;
+          border-left: 2px solid var(--color-border);
+          margin-top: 1rem;
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+
+        /* Inline Reply Form */
+        .reply-form {
+          margin-top: 1rem;
+          margin-bottom: 2rem;
+          background: var(--color-bg-secondary);
+          padding: 1.5rem;
+          border-radius: 12px;
+          border: 1px solid var(--color-border);
+        }
+        .reply-textarea {
+          width: 100%;
+          min-height: 100px;
+          padding: 1rem;
+          border: 1px solid var(--color-border);
+          border-radius: 8px;
+          margin-bottom: 1rem;
+          background: var(--color-bg-primary);
+          color: var(--color-text-main);
         }
         .reply-actions {
           display: flex;
-          gap: 0.75rem;
-          margin-top: 0.5rem;
+          gap: 1rem;
+          justify-content: flex-end;
         }
         .cancel-button {
-          padding: 0.6rem 1.25rem;
+          padding: 0.6rem 1.2rem;
           background: transparent;
-          color: var(--color-text-secondary);
           border: 1px solid var(--color-border);
-          border-radius: 999px;
+          border-radius: 8px;
+          color: var(--color-text-secondary);
           cursor: pointer;
-          font-size: 0.9rem;
-          font-weight: 500;
-          transition: all 0.2s;
         }
         .cancel-button:hover {
           background: var(--color-bg-tertiary);
           color: var(--color-text-main);
         }
-        .error-message {
-          color: #ff3b30; /* Apple Red */
-          margin-bottom: 1rem;
-          font-size: 0.9rem;
-        }
       `}</style>
     </div>
   );
 }
+
+
