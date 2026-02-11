@@ -2,6 +2,10 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 
+const MAX_COMMENT_LENGTH = 1000;
+const COOLDOWN_MS = 30000; // 30 seconds
+const MAX_DEPTH = 3;
+
 interface Comment {
   id: string;
   post_id: string;
@@ -67,6 +71,25 @@ const UserInputs = ({
   </div>
 );
 
+const Toast = ({ message, isVisible, onClose }: { message: string; isVisible: boolean; onClose: () => void }) => {
+  useEffect(() => {
+    if (isVisible) {
+      const timer = setTimeout(onClose, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isVisible, onClose]);
+
+  if (!isVisible) return null;
+
+  return (
+    <div className="toast-container">
+      <div className="toast-content">
+        {message}
+      </div>
+    </div>
+  );
+};
+
 interface CommentItemProps {
   comment: Comment & { replies: any[] };
   replyingTo: string | null;
@@ -81,6 +104,7 @@ interface CommentItemProps {
   setAuthorEmail: (value: string) => void;
   authorWebsite: string;
   setAuthorWebsite: (value: string) => void;
+  depth?: number;
 }
 
 const CommentItem = ({
@@ -95,7 +119,8 @@ const CommentItem = ({
   authorEmail,
   setAuthorEmail,
   authorWebsite,
-  setAuthorWebsite
+  setAuthorWebsite,
+  depth = 0
 }: CommentItemProps) => {
 
   // Helper to format date
@@ -126,18 +151,20 @@ const CommentItem = ({
 
         <p className="comment-text">{comment.content}</p>
 
-        <div className="comment-actions">
-          <button
-            className="reply-button"
-            onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
-          >
-            Reply
-          </button>
-        </div>
+          <div className="comment-actions">
+            {depth < MAX_DEPTH && (
+              <button
+                className="reply-button"
+                onClick={() => setReplyingTo(replyingTo === comment.id ? null : comment.id)}
+              >
+                Reply
+              </button>
+            )}
+          </div>
       </div>
 
       {replyingTo === comment.id && (
-        <form onSubmit={(e) => handleSubmit(e, comment.id)} className="reply-form">
+        <form onSubmit={(e) => handleSubmit(e, comment.id)} className="reply-form" noValidate>
           <UserInputs
             authorName={authorName}
             setAuthorName={setAuthorName}
@@ -182,6 +209,7 @@ const CommentItem = ({
               setAuthorEmail={setAuthorEmail}
               authorWebsite={authorWebsite}
               setAuthorWebsite={setAuthorWebsite}
+              depth={depth + 1}
             />
           ))}
         </div>
@@ -203,7 +231,14 @@ export default function Comments({ postId }: CommentsProps) {
   const [authorEmail, setAuthorEmail] = useState('');
   const [authorWebsite, setAuthorWebsite] = useState('');
   const [saveInfo, setSaveInfo] = useState(false);
-  const [notifyReply, setNotifyReply] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
+
+  const showNotification = (message: string) => {
+    setToastMessage(message);
+    setShowToast(true);
+  };
+
 
   useEffect(() => {
     fetchComments();
@@ -245,13 +280,29 @@ export default function Comments({ postId }: CommentsProps) {
     e.preventDefault();
     const content = parentId ? replyContent : newComment;
 
-    if (!content.trim()) return;
+    if (!content.trim()) {
+      showNotification('Please enter a comment');
+      return;
+    }
+
+    if (content.length > MAX_COMMENT_LENGTH) {
+      showNotification(`Comment is too long. Maximum ${MAX_COMMENT_LENGTH} characters allowed.`);
+      return;
+    }
+
+    const lastCommentTime = localStorage.getItem('last_comment_time');
+    if (lastCommentTime && Date.now() - parseInt(lastCommentTime) < COOLDOWN_MS) {
+      const remainingSeconds = Math.ceil((COOLDOWN_MS - (Date.now() - parseInt(lastCommentTime))) / 1000);
+      showNotification(`Please wait ${remainingSeconds} seconds before posting another comment.`);
+      return;
+    }
+
     if (!authorName.trim()) {
-      alert('Please enter your name');
+      showNotification('Please enter your name');
       return;
     }
     if (!authorEmail.trim()) {
-      alert('Please enter your email');
+      showNotification('Please enter your email');
       return;
     }
 
@@ -278,8 +329,7 @@ export default function Comments({ postId }: CommentsProps) {
           author_name: authorName,
           author_email: authorEmail,
           author_website: authorWebsite,
-          notify_reply: notifyReply
-        }]);
+          is_admin: authorEmail === 'kq69513516@proton.me'        }]);
 
       if (error) throw error;
 
@@ -289,10 +339,11 @@ export default function Comments({ postId }: CommentsProps) {
       } else {
         setNewComment('');
       }
+      localStorage.setItem('last_comment_time', Date.now().toString());
       fetchComments();
     } catch (err: any) {
       console.error('Error adding comment:', err);
-      alert('Failed to add comment: ' + err.message);
+      showNotification('Failed to add comment: ' + err.message);
     }
   }
 
@@ -319,13 +370,18 @@ export default function Comments({ postId }: CommentsProps) {
 
   return (
     <div className="comments-section">
+      <Toast
+        message={toastMessage}
+        isVisible={showToast}
+        onClose={() => setShowToast(false)}
+      />
       <h3>{comments.length} Comments</h3>
 
       <div className="new-comment-section">
         <h4 className="section-title">Leave a Comment</h4>
         <p className="section-subtitle">Your email address will not be published. Required fields are marked *</p>
 
-        <form onSubmit={(e) => handleSubmit(e)} className="comment-form">
+        <form onSubmit={(e) => handleSubmit(e)} className="comment-form" noValidate>
           <UserInputs
             authorName={authorName}
             setAuthorName={setAuthorName}
@@ -335,16 +391,7 @@ export default function Comments({ postId }: CommentsProps) {
             setAuthorWebsite={setAuthorWebsite}
           />
 
-          <div className="checkbox-group">
-            <label className="checkbox-label">
-              <input
-                type="checkbox"
-                checked={notifyReply}
-                onChange={(e) => setNotifyReply(e.target.checked)}
-              />
-              Notify me of new posts by email.
-            </label>
-          </div>
+
 
           <textarea
             value={newComment}
@@ -389,6 +436,7 @@ export default function Comments({ postId }: CommentsProps) {
             setAuthorEmail={setAuthorEmail}
             authorWebsite={authorWebsite}
             setAuthorWebsite={setAuthorWebsite}
+            depth={0}
           />
         ))}
       </div>
@@ -574,6 +622,48 @@ export default function Comments({ postId }: CommentsProps) {
         .cancel-button:hover {
           background: var(--color-bg-tertiary);
           color: var(--color-text-main);
+        }
+
+        /* Toast Notification */
+        .toast-container {
+          position: fixed;
+          top: 2rem;
+          left: 50%;
+          transform: translateX(-50%);
+          z-index: 1000;
+          pointer-events: none;
+        }
+        .toast-content {
+          background: rgba(255, 255, 255, 0.85);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          padding: 12px 24px;
+          border-radius: 24px;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+          font-size: 0.95rem;
+          font-weight: 500;
+          color: #333;
+          animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        /* Dark mode adjustment if applicable (assuming user has specific variables or class) */
+        @media (prefers-color-scheme: dark) {
+          .toast-content {
+            background: rgba(30, 30, 30, 0.85);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+          }
         }
       `}</style>
     </div>
