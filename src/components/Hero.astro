@@ -1,5 +1,6 @@
 ---
-
+import { Image } from "astro:assets";
+import flowerImage from "../assets/flower.jpg";
 ---
 
 <section class="hero">
@@ -17,12 +18,13 @@
         </div>
 
         <div class="hero-image-container">
-            <img
-                src="/flower.jpg"
+            <Image
+                src={flowerImage}
                 alt="Flower Decoration"
                 class="hero-image"
-                width="800"
-                height="500"
+                widths={[400, 800, 1200, 1600]}
+                sizes="(max-width: 800px) 100vw, 800px"
+                quality="max"
             />
             <p class="hero-caption">
                 Deep green leaves cradle clusters of pink and red roses, their

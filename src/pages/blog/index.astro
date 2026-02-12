@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 
@@ -65,11 +66,14 @@ const allTags = ["Life", "Technology", "Learning", "Creation", "Thinking"];
 						data-tags={(post.data.tags || []).join(",")}
 					>
 						{post.data.heroImage && (
-							<img
+							<Image
 								width={720}
 								height={360}
 								src={post.data.heroImage}
 								alt=""
+								widths={[360, 720]}
+								sizes="(max-width: 720px) 100vw, 720px"
+								quality="high"
 							/>
 						)}
 						<div class="content">

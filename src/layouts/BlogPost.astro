@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "./BaseLayout.astro";
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
@@ -9,7 +10,7 @@ interface Props {
     description: string;
     pubDate: Date;
     updatedDate?: Date;
-    heroImage?: string;
+    heroImage?: any; // Updated to accept ImageMetadata
     slug?: string;
     tags?: string[];
 }
@@ -24,7 +25,15 @@ const { title, description, pubDate, updatedDate, heroImage, slug, tags } =
             <div class="hero-image fade-in">
                 {
                     heroImage && (
-                        <img width={1020} height={510} src={heroImage} alt="" />
+                        <Image
+                            width={1020}
+                            height={510}
+                            src={heroImage}
+                            alt=""
+                            widths={[360, 720, 1020, 2040]}
+                            sizes="(max-width: 720px) 100vw, 1020px"
+                            quality="high"
+                        />
                     )
                 }
             </div>
