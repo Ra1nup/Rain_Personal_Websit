@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase';
 
 const MAX_COMMENT_LENGTH = 1000;
 const COOLDOWN_MS = 30000; // 30 seconds
-const MAX_DEPTH = 3;
+const MAX_DEPTH = 10; // Increased depth limit since visual nesting is flattened
 
 interface Comment {
   id: string;
@@ -105,6 +105,7 @@ interface CommentItemProps {
   authorWebsite: string;
   setAuthorWebsite: (value: string) => void;
   depth?: number;
+  parentAuthorName?: string; // New prop for replying to
 }
 
 const CommentItem = ({
@@ -120,7 +121,8 @@ const CommentItem = ({
   setAuthorEmail,
   authorWebsite,
   setAuthorWebsite,
-  depth = 0
+  depth = 0,
+  parentAuthorName
 }: CommentItemProps) => {
 
   // Helper to format date
@@ -145,7 +147,19 @@ const CommentItem = ({
           ) : (
             <span className="comment-author">{comment.author_name}</span>
           )}
+          
           {comment.is_admin && <span className="admin-badge">Admin</span>}
+          
+          {parentAuthorName && (
+            <span className="reply-indicator">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="reply-arrow">
+                <polyline points="9 10 4 15 9 20"></polyline>
+                <path d="M20 4v7a4 4 0 0 1-4 4H4"></path>
+              </svg>
+              Replying to <span className="reply-target">{parentAuthorName}</span>
+            </span>
+          )}
+
           <span className="comment-date">{formatDate(comment.created_at)}</span>
         </div>
 
@@ -176,7 +190,7 @@ const CommentItem = ({
           <textarea
             value={replyContent}
             onChange={(e) => setReplyContent(e.target.value)}
-            placeholder="Write a reply..."
+            placeholder={`Reply to ${comment.author_name}...`}
             required
             autoFocus
             className="reply-textarea"
@@ -193,7 +207,7 @@ const CommentItem = ({
       )}
 
       {comment.replies.length > 0 && (
-        <div className="replies-list">
+        <div className={`replies-list ${depth >= 1 ? 'replies-pinned-left' : ''}`}>
           {comment.replies.map(reply => (
             <CommentItem
               key={reply.id}
@@ -210,6 +224,7 @@ const CommentItem = ({
               authorWebsite={authorWebsite}
               setAuthorWebsite={setAuthorWebsite}
               depth={depth + 1}
+              parentAuthorName={comment.author_name}
             />
           ))}
         </div>
@@ -539,6 +554,7 @@ export default function Comments({ postId }: CommentsProps) {
           align-items: center;
           gap: 0.75rem;
           margin-bottom: 0.5rem;
+          flex-wrap: wrap;
         }
         .comment-author {
           font-weight: 600;
@@ -585,6 +601,30 @@ export default function Comments({ postId }: CommentsProps) {
           display: flex;
           flex-direction: column;
           gap: 1.5rem;
+        }
+        
+        .replies-pinned-left {
+          margin-left: 0;
+          padding-left: 0;
+          border-left: none;
+        }
+
+        .reply-indicator {
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+          font-size: 0.85rem;
+          color: var(--color-text-secondary);
+          background: var(--color-bg-secondary);
+          padding: 0.1rem 0.4rem;
+          border-radius: 4px;
+        }
+        .reply-target {
+          font-weight: 500;
+          color: var(--color-text-main);
+        }
+        .reply-arrow {
+          opacity: 0.6;
         }
 
         /* Inline Reply Form */

@@ -4,6 +4,7 @@ import BaseLayout from "./BaseLayout.astro";
 import type { CollectionEntry } from "astro:content";
 import { getCollection } from "astro:content";
 import Comments from "../components/Comments";
+import ViewCounter from "../components/ViewCounter";
 
 interface Props {
     title: string;
@@ -38,22 +39,25 @@ const { title, description, pubDate, updatedDate, heroImage, slug, tags } =
                 }
             </div>
             <div class="prose">
-                <a href="/blog" class="back-link fade-in">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><line x1="19" y1="12" x2="5" y2="12"></line><polyline
-                            points="12 19 5 12 12 5"></polyline></svg
-                    >
-                    Back to Blog
-                </a>
+                <div class="top-nav-bar fade-in">
+                    <a href="/blog" class="back-link">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            ><line x1="19" y1="12" x2="5" y2="12"></line><polyline
+                                points="12 19 5 12 12 5"></polyline></svg
+                        >
+                        Back to Blog
+                    </a>
+                    {slug && <ViewCounter client:load slug={slug} />}
+                </div>
                 <div class="title fade-in">
                     <div class="date">
                         {
@@ -269,13 +273,21 @@ const { title, description, pubDate, updatedDate, heroImage, slug, tags } =
     .prose :global(a:not(.back-link):hover) {
         text-decoration: none;
     }
+
+    /* Top Navigation Bar */
+    .top-nav-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
     .back-link {
         display: inline-flex;
         align-items: center;
         gap: 0.5rem;
         color: var(--color-text-secondary);
         text-decoration: none;
-        margin-bottom: 2rem;
         font-size: 0.9rem;
         transition:
             color 0.2s ease,
