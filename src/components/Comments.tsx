@@ -471,7 +471,7 @@ export default function Comments({ postId }: CommentsProps) {
           border-radius: 8px;
           background: var(--color-bg-secondary);
           color: var(--color-text-main);
-          font-size: 0.95rem;
+          font-size: 16px;
           transition: border-color 0.2s;
         }
         .user-input:focus {
@@ -487,7 +487,7 @@ export default function Comments({ postId }: CommentsProps) {
           background: var(--color-bg-secondary);
           color: var(--color-text-main);
           font-family: inherit;
-          font-size: 1rem;
+          font-size: 16px;
           resize: vertical;
           margin-bottom: 1rem;
         }
@@ -605,6 +605,7 @@ export default function Comments({ postId }: CommentsProps) {
           margin-bottom: 1rem;
           background: var(--color-bg-primary);
           color: var(--color-text-main);
+          font-size: 16px;
         }
         .reply-actions {
           display: flex;
