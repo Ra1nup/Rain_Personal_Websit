@@ -171,6 +171,104 @@ const { title, description, pubDate, updatedDate, heroImage, slug, tags } =
         max-width: 100%;
         height: auto;
     }
+
+    /* Typography for Markdown Content */
+    .prose :global(h2) {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-top: 2.5rem;
+        margin-bottom: 1rem;
+        line-height: 1.3;
+        color: var(--color-text-main);
+    }
+
+    .prose :global(h3) {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-top: 2rem;
+        margin-bottom: 0.8rem;
+        line-height: 1.4;
+        color: var(--color-text-main);
+    }
+
+    .prose :global(p) {
+        margin-bottom: 1.5rem;
+        line-height: 1.7;
+    }
+
+    .prose :global(ul), .prose :global(ol) {
+        margin-bottom: 1.5rem;
+        padding-left: 1.5rem;
+    }
+
+    .prose :global(ul) {
+        list-style: disc;
+    }
+
+    .prose :global(ol) {
+        list-style: decimal;
+    }
+
+    .prose :global(li) {
+        margin-bottom: 0.5rem;
+        margin-top: 0.5rem;
+        line-height: 1.6;
+    }
+    
+    .prose :global(strong) {
+        font-weight: 600;
+        color: var(--color-text-main);
+    }
+
+    .prose :global(blockquote) {
+        border-left: 4px solid var(--color-accent);
+        padding-left: 1rem;
+        margin-left: 0;
+        margin-right: 0;
+        font-style: italic;
+        color: var(--color-text-secondary);
+        background: var(--color-bg-secondary);
+        padding: 1rem;
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+    
+    .prose :global(code) {
+        font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+			Bitstream Vera Sans Mono, Courier New, monospace;
+        font-size: 0.9em;
+        background: var(--color-bg-secondary);
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        border: 1px solid var(--color-border);
+        color: var(--color-text-main);
+    }
+    
+    .prose :global(pre) {
+        padding: 1rem;
+        border-radius: var(--radius-md);
+        background: #1e1e1e;
+        color: #d4d4d4;
+        overflow-x: auto;
+        margin-bottom: 1.5rem;
+    }
+
+    .prose :global(pre code) {
+        background: transparent;
+        padding: 0;
+        border: none;
+        color: inherit;
+    }
+
+    /* Links in prose */
+    .prose :global(a:not(.back-link)) {
+        color: var(--color-accent);
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+
+    .prose :global(a:not(.back-link):hover) {
+        text-decoration: none;
+    }
     .back-link {
         display: inline-flex;
         align-items: center;

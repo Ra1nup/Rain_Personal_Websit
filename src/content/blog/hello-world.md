@@ -4,7 +4,7 @@ pubDate: 2026-02-10
 description: "关于我，以及我是如何用 Astro + React + Supabase 构建这个无服务架构网站的。"
 author: "Rain"
 heroImage: "../../assets/blog/hello-world.png"
-tags: ["Life", "Astro", "Supabase", "FullStack", "Technology"]
+tags: ["Life", "Astro", "Supabase", "FullStack", "Creation"]
 ---
 
 ## 👋 你好，世界
@@ -12,8 +12,6 @@ tags: ["Life", "Astro", "Supabase", "FullStack", "Technology"]
 欢迎来到 **Ra1nup.top**，这是我在互联网上搭建的一个小小的数字花园。我是 **Rain
 (Qi
 Kang)**，一名即将毕业的计算机科学与技术专业大四学生。在这个充斥着算法推荐和碎片化信息的时代，我一直希望能拥有一个完全属于自己的角落。在这里，不需要迎合流量，只需要记录我对技术的探索、对生活的观察以及那些灵光一现的瞬间。
-<br>
-<br>
 
 ### 关于我：不止于代码
 
@@ -26,16 +24,11 @@ Kang)**，一名即将毕业的计算机科学与技术专业大四学生。在�
 - **多元兴趣**：当我不盯着工作时，我可能在《英雄联盟》里玩海克斯大乱斗，或者在听
   NewJeans 的歌单。
 
-<br>
-
-<br>
-
 ## 🛠️ 这个网站是如何搭建的？
 
 既然是技术博客，第一篇文章当然要聊聊“网站本身”。为了追求极致的性能和开发体验，我没有选择
 WordPress 或 Hexo，而是采用了一套现代化的 **Jamstack** 架构：**Astro + React +
 Supabase**。
-<br><br>
 
 ### 1. 框架：为什么是 Astro?
 
