@@ -11,9 +11,10 @@ interface Props {
     updatedDate?: Date;
     heroImage?: string;
     slug?: string;
+    tags?: string[];
 }
 
-const { title, description, pubDate, updatedDate, heroImage, slug } =
+const { title, description, pubDate, updatedDate, heroImage, slug, tags } =
     Astro.props;
 ---
 
@@ -67,6 +68,15 @@ const { title, description, pubDate, updatedDate, heroImage, slug } =
                         }
                     </div>
                     <h1>{title}</h1>
+                    {
+                        tags && tags.length > 0 && (
+                            <div class="tags">
+                                {tags.map((tag) => (
+                                    <span class="tag">{tag}</span>
+                                ))}
+                            </div>
+                        )
+                    }
                     <hr />
                 </div>
                 <div class="post-content fade-in">
@@ -182,4 +192,20 @@ const { title, description, pubDate, updatedDate, heroImage, slug } =
     .last-updated-on {
         font-style: italic;
     }
+    .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+        justify-content: center;
+        margin-bottom: 1em;
+    }
+    .tag {
+        background: var(--color-bg-secondary);
+        color: var(--color-text-secondary);
+        padding: 0.2em 0.8em;
+        border-radius: 999px;
+        font-size: 0.85em;
+        border: 1px solid var(--color-border);
+    }
+
 </style>

@@ -5,18 +5,64 @@ import { getCollection } from "astro:content";
 const posts = (await getCollection("blog")).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+// Fixed tags
+const allTags = ["Life", "Technology", "Learning", "Creation", "Thinking"];
 ---
 
 <BaseLayout title="Blog - Rain's Personal Website">
 	<section class="container blog-section">
 		<h1 class="gradient-text fade-in">Blog</h1>
-		<div class="posts-grid">
+
+		<div class="search-container fade-in" style="animation-delay: 0.1s">
+			<div class="search-bar">
+				<svg
+					width="20"
+					height="20"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2.5"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="search-icon"
+					id="search-icon"
+				>
+					<circle cx="11" cy="11" r="8"></circle>
+					<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+				</svg>
+				<input
+					type="text"
+					id="search-input"
+					placeholder="Search posts..."
+					autocomplete="off"
+				/>
+			</div>
+			{
+				allTags.length > 0 && (
+					<div class="tags-filter">
+						<button class="tag-filter active" data-tag="all">
+							All
+						</button>
+						{allTags.map((tag) => (
+							<button class="tag-filter" data-tag={tag}>
+								{tag}
+							</button>
+						))}
+					</div>
+				)
+			}
+		</div>
+
+		<div class="posts-grid" id="posts-grid">
 			{
 				posts.map((post, index) => (
 					<a
 						href={`/blog/${post.slug}/`}
 						class="post-card glass fade-in"
 						style={`animation-delay: ${index * 0.1 + 0.2}s`}
+						data-title={post.data.title.toLowerCase()}
+						data-tags={(post.data.tags || []).join(",")}
 					>
 						{post.data.heroImage && (
 							<img
@@ -42,7 +88,58 @@ const posts = (await getCollection("blog")).sort(
 			}
 		</div>
 	</section>
+	</section>
 </BaseLayout>
+
+<script>
+	const searchInput = document.getElementById("search-input") as HTMLInputElement;
+	const searchIcon = document.getElementById("search-icon");
+	const tagButtons = document.querySelectorAll(".tag-filter");
+	const posts = document.querySelectorAll(".post-card");
+	let activeTag = "all";
+
+	function filterPosts() {
+		const searchTerm = searchInput.value.toLowerCase();
+		const searchTokens = searchTerm.split(/\s+/).filter(token => token.length > 0);
+
+		posts.forEach((post) => {
+			const title = (post as HTMLElement).dataset.title || "";
+			const tags = ((post as HTMLElement).dataset.tags || "").toLowerCase();
+			const combinedText = `${title} ${tags}`;
+			
+			// Check if every search token exists in the combined text (title or tags)
+			const matchesSearch = searchTokens.length === 0 || 
+				searchTokens.every(token => combinedText.includes(token));
+			
+			const matchesTag = activeTag === "all" || tags.includes(activeTag.toLowerCase());
+
+			if (matchesSearch && matchesTag) {
+				(post as HTMLElement).style.display = "flex";
+			} else {
+				(post as HTMLElement).style.display = "none";
+			}
+		});
+	}
+
+	searchInput?.addEventListener("input", filterPosts);
+
+	// Focus input when clicking icon
+	searchIcon?.addEventListener("click", () => {
+		searchInput?.focus();
+	});
+
+	tagButtons.forEach((button) => {
+		button.addEventListener("click", () => {
+			// Remove active class from all buttons
+			tagButtons.forEach((btn) => btn.classList.remove("active"));
+			// Add active class to clicked button
+			button.classList.add("active");
+			
+			activeTag = (button as HTMLElement).dataset.tag || "all";
+			filterPosts();
+		});
+	});
+</script>
 
 <style>
 	.blog-section {
@@ -144,5 +241,105 @@ const posts = (await getCollection("blog")).sort(
 	.description {
 		color: var(--color-text-main);
 		line-height: 1.6;
+	}
+
+	/* Search & Filter Styles */
+	.search-container {
+		max-width: 600px;
+		margin: 0 auto var(--spacing-xl);
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+		align-items: center;
+	}
+
+	.search-bar {
+		position: relative;
+		width: 100%;
+		max-width: 460px;
+	}
+
+	.search-icon {
+		position: absolute;
+		left: 16px;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 20px;
+		height: 20px;
+		color: var(--color-text-secondary);
+		cursor: pointer;
+		transition: color 0.2s ease;
+		z-index: 10;
+	}
+
+	.search-icon:hover {
+		color: var(--color-accent);
+	}
+
+	#search-input {
+		width: 100%;
+		padding: 14px 20px 14px 50px;
+		border: 1px solid rgba(0, 0, 0, 0.1);
+		border-radius: 16px;
+		background: rgba(255, 255, 255, 0.8);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		color: var(--color-text-main);
+		font-size: 1.05rem;
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+		transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+	}
+
+	:global(.dark) #search-input {
+		background: rgba(44, 44, 46, 0.8);
+		border-color: rgba(255, 255, 255, 0.1);
+		box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+	}
+
+	#search-input:focus {
+		outline: none;
+		border-color: var(--color-accent);
+		box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+		background: var(--color-bg-secondary);
+		transform: translateY(-1px);
+	}
+
+	.tags-filter {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.8rem;
+		justify-content: center;
+	}
+
+	.tag-filter {
+		background: transparent;
+		border: 1px solid var(--color-border);
+		color: var(--color-text-secondary);
+		padding: 8px 16px;
+		border-radius: 999px;
+		font-size: 0.9rem;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		font-weight: 500;
+	}
+
+	.tag-filter:hover {
+		background: var(--color-bg-secondary);
+		color: var(--color-text-main);
+		border-color: var(--color-text-secondary);
+		transform: translateY(-1px);
+	}
+
+	.tag-filter.active {
+		background: var(--color-text-main);
+		color: var(--color-bg);
+		border-color: var(--color-text-main);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	}
+
+	:global(.dark) .tag-filter.active {
+		background: #fff;
+		color: #000;
+		border-color: #fff;
 	}
 </style>
