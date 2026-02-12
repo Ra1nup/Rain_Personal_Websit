@@ -202,17 +202,21 @@ const allTags = ["Life", "Technology", "Learning", "Creation", "Thinking"];
 
 	.post-card {
 		border-radius: var(--radius-lg);
-		transition:
-			transform 0.2s ease,
-			box-shadow 0.2s ease;
+		transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
 	}
 
 	.post-card:hover {
-		transform: translateY(-4px);
-		box-shadow: var(--shadow-md);
+		transform: translateY(-4px) scale(1.03);
+		box-shadow: var(--shadow-lg);
+		z-index: 10;
+	}
+
+	:global(.dark) .post-card:hover {
+		background: rgba(44, 44, 46, 0.8);
+		box-shadow: 0 10px 30px -10px rgba(255, 255, 255, 0.1);
 	}
 
 	.post-card img {
