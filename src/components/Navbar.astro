@@ -2,7 +2,7 @@
 import ThemeToggle from "./ThemeToggle.astro";
 ---
 
-<nav class="navbar glass">
+<nav class="navbar">
     <div class="container navbar-content">
         <a href="/" class="logo-link" aria-label="Home">
             <img
@@ -66,6 +66,9 @@ import ThemeToggle from "./ThemeToggle.astro";
         display: flex;
         align-items: center;
         background: var(--color-navbar-bg); /* Use variable for theming */
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--color-border);
         transition: background-color 0.3s ease;
     }
 
