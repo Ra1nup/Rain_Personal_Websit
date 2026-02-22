@@ -4,7 +4,7 @@ pubDate: 2026-02-10
 description: "关于我，以及我是如何用 Astro + React + Supabase 构建这个无服务架构网站的。"
 author: "Rain"
 heroImage: "../../assets/blog/hello-world.png"
-tags: ["Life", "Astro", "Supabase", "FullStack", "Creation"]
+tags: ["Thoughts", "Tech", "Astro", "FullStack"]
 ---
 
 ## 👋 你好，世界
