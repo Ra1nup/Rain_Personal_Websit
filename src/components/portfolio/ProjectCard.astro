@@ -1,0 +1,410 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+
+const { project } = Astro.props;
+const {
+  title,
+  tagline,
+  category,
+  tags,
+  status,
+  year,
+  coverImage,
+  bannerGradient,
+  demoUrl,
+  githubUrl,
+} = project.data;
+
+const projectSlug = project.slug || project.id;
+
+// Category Badge styles
+const categoryBadges: Record<string, { label: string; bg: string }> = {
+  Web: { label: "Web Dev", bg: "rgba(0, 113, 227, 0.15)" },
+  AIGC: { label: "AIGC & AI", bg: "rgba(255, 94, 98, 0.15)" },
+  Tools: { label: "Tools", bg: "rgba(191, 90, 242, 0.15)" },
+  Mobile: { label: "Mobile", bg: "rgba(255, 149, 0, 0.15)" },
+};
+
+const badgeInfo = categoryBadges[category] || {
+  label: category,
+  bg: "rgba(134, 134, 139, 0.15)",
+};
+---
+
+<article class="project-card glass" data-category={category}>
+  <a href={`/portfolio/${projectSlug}`} class="card-main-link" aria-label={`查看 ${title} 详情`}>
+    <!-- Cover Image / Visual Header -->
+    <div class="card-cover-wrapper" style={`background: ${bannerGradient || 'linear-gradient(135deg, #1d1d1f 0%, #3a3a3c 100%)'}`}>
+      {coverImage ? (
+        <Image
+          src={coverImage}
+          alt={title}
+          width={800}
+          height={450}
+          quality="high"
+          class="card-cover-img"
+        />
+      ) : (
+        <div class="cover-fallback">
+          <span class="fallback-initials">{title.slice(0, 2).toUpperCase()}</span>
+        </div>
+      )}
+      <div class="card-cover-overlay"></div>
+      
+      <!-- Top meta badges on cover -->
+      <div class="cover-top-meta">
+        <span class="category-pill">{badgeInfo.label}</span>
+        <div class="status-indicator">
+          {status === 'Live' && <span class="status-dot live" />}
+          {status === 'Completed' && <span class="status-dot completed" />}
+          {status === 'In Progress' && <span class="status-dot wip" />}
+          <span class="status-text">{status}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body">
+      <div class="card-header-row">
+        <div class="title-with-year">
+          <h3 class="project-title">{title}</h3>
+          <span class="project-year">{year}</span>
+        </div>
+        <div class="arrow-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </div>
+      </div>
+
+      <p class="project-tagline">{tagline}</p>
+
+      <!-- Tech Stack Badges -->
+      <div class="tags-row">
+        {tags.slice(0, 4).map((tag) => (
+          <span class="tech-tag">{tag}</span>
+        ))}
+        {tags.length > 4 && (
+          <span class="tech-tag more">+{tags.length - 4}</span>
+        )}
+      </div>
+    </div>
+  </a>
+
+  <!-- Card Action Footer -->
+  <div class="card-footer">
+    <a href={`/portfolio/${projectSlug}`} class="view-detail-btn">
+      <span>查看</span>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14M12 5l7 7-7 7"/>
+      </svg>
+    </a>
+
+    <div class="external-links">
+      {demoUrl && (
+        <a 
+          href={demoUrl} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="ext-btn" 
+          title="在线体验"
+          aria-label="Live Demo"
+          onclick="event.stopPropagation();"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
+      )}
+      {githubUrl && (
+        <a 
+          href={githubUrl} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="ext-btn" 
+          title="GitHub 源码"
+          aria-label="GitHub Repository"
+          onclick="event.stopPropagation();"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+        </a>
+      )}
+    </div>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .project-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+    border-color: rgba(0, 113, 227, 0.35);
+  }
+
+  .card-main-link {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Cover Image Box */
+  .card-cover-wrapper {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    overflow: hidden;
+  }
+
+  .card-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project-card:hover .card-cover-img {
+    transform: scale(1.06);
+  }
+
+  .card-cover-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.35) 0%, transparent 40%, rgba(0, 0, 0, 0.6) 100%);
+    pointer-events: none;
+  }
+
+  .cover-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fallback-initials {
+    font-size: 3rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .cover-top-meta {
+    position: absolute;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    right: var(--spacing-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+  }
+
+  .category-pill {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.9);
+    color: #1d1d1f;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+
+  .status-dot.live {
+    background-color: #34c759;
+    box-shadow: 0 0 8px #34c759;
+  }
+
+  .status-dot.completed {
+    background-color: #0071e3;
+  }
+
+  .status-dot.wip {
+    background-color: #ff9500;
+  }
+
+  /* Body Content */
+  .card-body {
+    padding: var(--spacing-lg);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: var(--spacing-sm);
+  }
+
+  .card-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+  }
+
+  .title-with-year {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .project-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+    line-height: 1.3;
+    margin: 0;
+    transition: color 0.2s ease;
+  }
+
+  .project-year {
+    font-size: 0.8rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+  }
+
+  .arrow-icon {
+    color: var(--color-text-secondary);
+    transition: transform 0.3s ease, color 0.3s ease;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .project-card:hover .project-title {
+    color: var(--color-accent);
+  }
+
+  .project-card:hover .arrow-icon {
+    transform: translate(4px, -2px);
+    color: var(--color-accent);
+  }
+
+  .project-tagline {
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Tags */
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: var(--spacing-sm);
+  }
+
+  .tech-tag {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    border: 1px solid var(--color-border);
+  }
+
+  .tech-tag.more {
+    color: var(--color-accent);
+    background: rgba(0, 113, 227, 0.08);
+  }
+
+  /* Footer Actions */
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border-top: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .view-detail-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-accent);
+    text-decoration: none;
+    transition: gap 0.2s ease;
+  }
+
+  .view-detail-btn:hover {
+    gap: 10px;
+  }
+
+  .external-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ext-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-full);
+    color: var(--color-text-secondary);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .ext-btn:hover {
+    background: var(--color-accent);
+    color: white;
+    transform: scale(1.08);
+  }
+</style>
