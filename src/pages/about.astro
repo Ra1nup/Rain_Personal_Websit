@@ -1,1120 +1,1366 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const pageTitle = "About Me";
+const pageTitle = "About Me - Rain";
+const pageDescription = "Get to know Rain (Qi Kang) — Computer Science student, developer, and passionate creator exploring code, gaming, basketball, music, and cinema.";
+
+// Passions & Favorites Data
+interface PassionItem {
+    id: string;
+    title: string;
+    subtitle: string;
+    category: "games" | "nba" | "kpop" | "anime-movies" | "foods";
+    categoryLabel: string;
+    categoryIcon: string;
+    image: string;
+    tag?: string;
+    isTransparent?: boolean; // For PNGs with transparent background
+}
+
+const passionItems: PassionItem[] = [
+    // Video Games
+    {
+        id: "lol",
+        title: "League of Legends",
+        subtitle: "英雄联盟 · MOBA竞技与团队配合",
+        category: "games",
+        categoryLabel: "Video Game",
+        categoryIcon: "🎮",
+        image: "/about/Video Games/League of Legends.jpg",
+        tag: "MOBA / Esports",
+    },
+    {
+        id: "cs2",
+        title: "Counter-Strike 2",
+        subtitle: "反恐精英 2 · 精准枪法与战术博弈",
+        category: "games",
+        categoryLabel: "Video Game",
+        categoryIcon: "🎮",
+        image: "/about/Video Games/cs2.png",
+        tag: "FPS / Competitive",
+    },
+    {
+        id: "valorant",
+        title: "Valorant",
+        subtitle: "无畏契约 · 英雄技能与竞技射击",
+        category: "games",
+        categoryLabel: "Video Game",
+        categoryIcon: "🎮",
+        image: "/about/Video Games/valorant.png",
+        tag: "Tactical FPS",
+    },
+    {
+        id: "overwatch",
+        title: "Overwatch",
+        subtitle: "守望先锋 · 英雄齐聚与团队配合",
+        category: "games",
+        categoryLabel: "Video Game",
+        categoryIcon: "🎮",
+        image: "/about/Video Games/overwatch.jpg",
+        tag: "Team Hero Shooter",
+    },
+
+    // NBA Players
+    {
+        id: "durant",
+        title: "Kevin Durant",
+        subtitle: "无解死神 · Easy Money Sniper",
+        category: "nba",
+        categoryLabel: "NBA Superstar",
+        categoryIcon: "🏀",
+        image: "/about/NBA Player/Durant.png",
+        tag: "Suns #35 / Forward",
+    },
+    {
+        id: "doncic",
+        title: "Luka Dončić",
+        subtitle: "魔术卢卡 · 控场大师与进攻万花筒",
+        category: "nba",
+        categoryLabel: "NBA Superstar",
+        categoryIcon: "🏀",
+        image: "/about/NBA Player/Dončić.png",
+        tag: "Mavericks #77 / Guard",
+    },
+    {
+        id: "curry",
+        title: "Stephen Curry",
+        subtitle: "库里 · 改变现代篮球的三分之神",
+        category: "nba",
+        categoryLabel: "NBA Superstar",
+        categoryIcon: "🏀",
+        image: "/about/NBA Player/Stephen-Curry.png",
+        tag: "Warriors #30 / Guard",
+    },
+    {
+        id: "irving",
+        title: "Kyrie Irving",
+        subtitle: "德鲁大叔 · 极致球感与华丽控球",
+        category: "nba",
+        categoryLabel: "NBA Superstar",
+        categoryIcon: "🏀",
+        image: "/about/NBA Player/Irving.png",
+        tag: "Mavericks #11 / Guard",
+    },
+
+    // K-Pop Groups
+    {
+        id: "aespa",
+        title: "aespa",
+        subtitle: "KWANGYA 元宇宙概念 · Supernova 潮流风暴",
+        category: "kpop",
+        categoryLabel: "K-Pop",
+        categoryIcon: "🎵",
+        image: "/about/K-pop/aespa.png",
+        tag: "SM Entertainment",
+    },
+    {
+        id: "idle",
+        title: "(G)I-DLE",
+        subtitle: "全员自作曲领军女团 · 态度与独立先锋",
+        category: "kpop",
+        categoryLabel: "K-Pop",
+        categoryIcon: "🎵",
+        image: "/about/K-pop/i-dle.png",
+        tag: "Cube Entertainment",
+    },
+    {
+        id: "newjeans",
+        title: "NewJeans",
+        subtitle: "清爽 Y2K 潮流复古美学与松弛感音浪",
+        category: "kpop",
+        categoryLabel: "K-Pop",
+        categoryIcon: "🎵",
+        image: "/about/K-pop/newjeans.jpg",
+        tag: "ADOR / Y2K Vibe",
+    },
+    {
+        id: "lesserafim",
+        title: "LE SSERAFIM",
+        subtitle: "无畏前行 · 充满力量感的舞台掌控力",
+        category: "kpop",
+        categoryLabel: "K-Pop",
+        categoryIcon: "🎵",
+        image: "/about/K-pop/LE-SSERAFIM.png",
+        tag: "SOURCE MUSIC",
+    },
+
+    // Animation & Cinema
+    {
+        id: "spiderverse",
+        title: "Spider-Man: Spider-Verse",
+        subtitle: "蜘蛛侠：平行宇宙 · 视觉艺术巅峰与漫画美学",
+        category: "anime-movies",
+        categoryLabel: "Animation",
+        categoryIcon: "🕷️",
+        image: "/about/Animation/Spider-Man Into the Spider-Verse.png",
+        tag: "Sony Animation",
+    },
+    {
+        id: "arcane",
+        title: "Arcane",
+        subtitle: "双城之战 · 顶尖叙事与手绘朋克画风",
+        category: "anime-movies",
+        categoryLabel: "Animation",
+        categoryIcon: "⚡",
+        image: "/about/Animation/Arcane.jpg",
+        tag: "Riot & Fortiche",
+    },
+    {
+        id: "yourname",
+        title: "君の名は。 (Your Name)",
+        subtitle: "新海诚代表作 · 时空交错与唯美光影叙事",
+        category: "anime-movies",
+        categoryLabel: "Animation",
+        categoryIcon: "✨",
+        image: "/about/Animation/你的名字.jpg",
+        tag: "CoMix Wave Films",
+    },
+    {
+        id: "naruto",
+        title: "Naruto (火影忍者)",
+        subtitle: "羁绊、忍道与少年时代的热血热烈",
+        category: "anime-movies",
+        categoryLabel: "Animation",
+        categoryIcon: "🍥",
+        image: "/about/Animation/Naruto.png",
+        tag: "Studio Pierrot",
+    },
+    {
+        id: "interstellar",
+        title: "Interstellar (星际穿越)",
+        subtitle: "克里斯托弗·诺兰 · 穿透黑洞与时间的爱与浩瀚",
+        category: "anime-movies",
+        categoryLabel: "Cinema",
+        categoryIcon: "🚀",
+        image: "/about/movies/Interstellar.jpg",
+        tag: "Sci-Fi Masterpiece",
+    },
+    {
+        id: "shawshank",
+        title: "The Shawshank Redemption",
+        subtitle: "肖申克的救赎 · 自由与希望是世间最美好的事物",
+        category: "anime-movies",
+        categoryLabel: "Cinema",
+        categoryIcon: "🎬",
+        image: "/about/movies/肖申克的救赎.png",
+        tag: "Classic Cinema",
+    },
+    {
+        id: "happyness",
+        title: "The Pursuit of Happyness",
+        subtitle: "当幸福来敲门 · 无论多么艰难，永远守护你的梦想",
+        category: "anime-movies",
+        categoryLabel: "Cinema",
+        categoryIcon: "🌱",
+        image: "/about/movies/当幸福来敲门.jpg",
+        tag: "Inspirational",
+    },
+    {
+        id: "legend1900",
+        title: "The Legend of 1900",
+        subtitle: "海上钢琴师 · 键盘有限，而音乐与灵魂无垠",
+        category: "anime-movies",
+        categoryLabel: "Cinema",
+        categoryIcon: "🎹",
+        image: "/about/movies/海上钢琴师.png",
+        tag: "Masterpiece",
+    },
+
+    // Foods
+    {
+        id: "peking-duck",
+        title: "北京烤鸭 (Peking Duck)",
+        subtitle: "果木炭火烤制 · 皮脆肉嫩与葱丝甜面酱绝配",
+        category: "foods",
+        categoryLabel: "Gourmet",
+        categoryIcon: "🦆",
+        image: "/about/Foods/北京烤鸭.jpg",
+        tag: "Beijing Classic",
+    },
+    {
+        id: "hotpot",
+        title: "川渝热辣火锅 (Hot Pot)",
+        subtitle: "牛油红锅 · 鲜毛肚鸭肠与热闹烟火气",
+        category: "foods",
+        categoryLabel: "Gourmet",
+        categoryIcon: "🍲",
+        image: "/about/Foods/火锅.jpg",
+        tag: "Spicy & Sizzling",
+    },
+    {
+        id: "roujiamo",
+        title: "腊汁肉夹馍 (Roujiamo)",
+        subtitle: "白吉馍酥脆焦香 · 卤肉肥而不腻汁水充盈",
+        category: "foods",
+        categoryLabel: "Gourmet",
+        categoryIcon: "🥙",
+        image: "/about/Foods/腊汁肉夹馍.jpg",
+        tag: "Shaanxi Specialty",
+    },
+    {
+        id: "mcdonalds",
+        title: "麦当劳 (McDonald's)",
+        subtitle: "双层吉士堡与黄金脆薯条 · 快乐能量补给站",
+        category: "foods",
+        categoryLabel: "Gourmet",
+        categoryIcon: "🍟",
+        image: "/about/Foods/麦当劳.jpg",
+        tag: "Comfort Food",
+    },
+    {
+        id: "cold-noodles",
+        title: "东北烤冷面 (Grilled Noodles)",
+        subtitle: "酸甜微辣秘制酱料 · 裹满鸡蛋与香肠的街头美味",
+        category: "foods",
+        categoryLabel: "Gourmet",
+        categoryIcon: "🥢",
+        image: "/about/Foods/烤冷面.jpg",
+        tag: "Street Delight",
+    },
+];
+
+const categories = [
+    { id: "games", label: "游戏", icon: "🎮", count: passionItems.filter(i => i.category === 'games').length },
+    { id: "nba", label: "篮球", icon: "🏀", count: passionItems.filter(i => i.category === 'nba').length },
+    { id: "kpop", label: "音乐", icon: "🎵", count: passionItems.filter(i => i.category === 'kpop').length },
+    { id: "anime-movies", label: "影视动漫", icon: "🎬", count: passionItems.filter(i => i.category === 'anime-movies').length },
+    { id: "foods", label: "美食", icon: "🍜", count: passionItems.filter(i => i.category === 'foods').length },
+];
 ---
 
-<BaseLayout title={pageTitle}>
-    <div class="about-container">
-        <!-- Header Section -->
-        <section class="header-section fade-in">
-            <h1 class="gradient-text">About Me</h1>
-        </section>
+<BaseLayout title={pageTitle} description={pageDescription}>
+    <div class="about-page">
+        <!-- Page Header -->
+        <header class="page-header fade-in">
+            <div class="header-badge">
+                <span class="pulse-dot"></span>
+                <span>Get to Know Rain</span>
+            </div>
+            <h1 class="page-title">
+                Hello, I'm <span class="gradient-text">Rain</span>
+            </h1>
+            <p class="page-subtitle">
+                一个专业的逗比。食物勘探专员、深度睡眠研究员、夜间思考者、职场观察员、影视品鉴师、偶像鉴赏家、情绪感悟家、松弛生活家。梦想是和另一半（还没找到）一起环游世界。
+            </p>
+        </header>
 
-        <!-- Profile Section -->
-        <section class="profile-section fade-in delay-1">
-            <div class="profile-card glass">
-                <div class="profile-image-container">
+        <!-- Bento Grid Hero Section -->
+        <section class="bento-container fade-in delay-1">
+            <!-- 1. Main Profile Card -->
+            <div class="bento-card profile-main-card glass glow-effect">
+                <div class="avatar-wrapper">
+                    <div class="avatar-ring"></div>
                     <img
-                        src="/QiKang.png"
-                        alt="QiKang (Rain)"
-                        class="profile-image"
+                        src="/qikang1.jpg"
+                        alt="Qi Kang (Rain)"
+                        class="avatar-img"
                     />
                 </div>
-                <div class="profile-info">
-                    <div class="info-header">
-                        <h2 class="name">
-                            Qi Kang <span class="nickname">(Rain)</span>
-                        </h2>
-                        <p class="role">Computer Science Student</p>
+                <div class="profile-content">
+                    <div class="status-badge">
+                        <span class="status-indicator"></span>
+                        <span class="status-text">Available for Projects & Collaboration</span>
                     </div>
+                    <h2 class="profile-name">
+                        Rain <span class="profile-alias">(Qi Kang)</span>
+                    </h2>
+                    <p class="profile-role">
+                        Computer Science Graduate & Full‑Stack / AIGC Explorer
+                    </p>
+                    <p class="profile-bio">
+                        专注于全栈 Web 开发、AIGC 智能工具与深度学习应用实践。乐于和各路朋友交流探讨，保持持续学习。
+                    </p>
+                </div>
+            </div>
 
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="label">Location</span>
-                            <span class="value">Beijing, China</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="label">MBTI</span>
-                            <span class="value">ENFJ</span>
-                        </div>
+            <!-- 2. Location & Quick Info Card -->
+            <div class="bento-card info-card glass">
+                <div class="card-icon-header">
+                    <div class="icon-box">📍</div>
+                    <span class="card-tag">Location</span>
+                </div>
+                <div class="info-body">
+                    <h3 class="info-title">Beijing, China</h3>
+                    <p class="info-desc">坐标通州，欢迎来找我玩</p>
+                </div>
+                <div class="micro-stats">
+                    <div class="stat-pill">🎓 CS Major</div>
+                    <div class="stat-pill">💻 Active Dev</div>
+                </div>
+            </div>
+
+            <!-- 3. MBTI & Personality Card -->
+            <div class="bento-card mbti-card glass">
+                <div class="card-icon-header">
+                    <div class="icon-box mbti-icon">⚡</div>
+                    <span class="card-tag">Personality</span>
+                </div>
+                <div class="mbti-content">
+                    <div class="mbti-badge">
+                        <span class="mbti-type">ENFJ-A</span>
+                        <span class="mbti-title">主人公 / The Protagonist</span>
                     </div>
-
-                    <div class="hobbies-container">
-                        <span class="label">Hobbies & Interests</span>
-                        <div class="tags">
-                            <span class="tag">Fitness</span>
-                            <span class="tag">Basketball</span>
-                            <span class="tag">Music</span>
-                            <span class="tag">Reading</span>
-                            <span class="tag">Video Games</span>
-                            <span class="tag">Delicious Food</span>
-                            <span class="tag">Coding</span>
-                        </div>
+                    <p class="mbti-desc">
+                        富有同理心、热情并具备敏锐的创造力。善于发现生活与代码中的可能性，乐于与伙伴共同成长。
+                    </p>
+                    <div class="traits-group">
+                        <span class="trait-tag">Empathetic</span>
+                        <span class="trait-tag">Passionate</span>
+                        <span class="trait-tag">Visionary</span>
                     </div>
                 </div>
             </div>
+
+            <!-- 4. Lifestyle & Passion Tags -->
+            <div class="bento-card hobbies-card glass">
+                <div class="card-icon-header">
+                    <div class="icon-box">✨</div>
+                    <span class="card-tag">Life Dimensions</span>
+                </div>
+                <h3 class="hobbies-title">When I'm Not Working</h3>
+                <div class="hobby-chips">
+                    <span class="hobby-chip"><span class="chip-emoji">💪</span> 力量训练 (Fitness)</span>
+                    <span class="hobby-chip"><span class="chip-emoji">🏀</span> 热血篮球 (Basketball)</span>
+                    <span class="hobby-chip"><span class="chip-emoji">🎮</span> 竞技开黑 (Gaming)</span>
+                    <span class="hobby-chip"><span class="chip-emoji">🎧</span> 流行与电子乐 (Music)</span>
+                    <span class="hobby-chip"><span class="chip-emoji">📚</span> 深度阅读 (Reading)</span>
+                    <span class="hobby-chip"><span class="chip-emoji">🍜</span> 美食寻踪 (Foodie)</span>
+                    <span class="hobby-chip"><span class="chip-emoji">🎬</span> 电影与番剧 (Cinema)</span>
+                </div>
+            </div>
+
+            <!-- 5. Personal Philosophy Card -->
+            <div class="bento-card philosophy-card glass">
+                <div class="card-icon-header">
+                    <div class="icon-box">💡</div>
+                    <span class="card-tag">Philosophy</span>
+                </div>
+                <blockquote class="philosophy-quote">
+                    "天天开心，身体健康最重要，专注自身，拒绝内耗！"
+                </blockquote>
+                <div class="quote-author">— Rain's Core Mindset</div>
+            </div>
         </section>
 
-        <section class="favorites-section fade-in delay-2">
-            <h2 class="section-title">Favorite Video Games</h2>
-            <div class="carousel-container glass">
-                <button
-                    class="carousel-btn prev-btn"
-                    aria-label="Previous slide"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><path d="M15 18l-6-6 6-6"></path></svg
-                    >
-                </button>
-
-                <div class="carousel-track-container">
-                    <ul class="carousel-track">
-                        <li class="carousel-slide current-slide">
-                            <img
-                                src="/about/Video Games/League of Legends.jpg"
-                                alt="League of Legends"
-                                class="carousel-image"
-                                data-title="League of Legends"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/Video Games/overwatch.jpg"
-                                alt="Overwatch"
-                                class="carousel-image"
-                                data-title="Overwatch"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/Video Games/cs2.png"
-                                alt="Counter-Strike 2"
-                                class="carousel-image"
-                                data-title="Counter-Strike 2"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/Video Games/valorant.png"
-                                alt="Valorant"
-                                class="carousel-image"
-                                data-title="Valorant"
-                            />
-                        </li>
-                    </ul>
+        <!-- Passions & Favorites Showcase Section -->
+        <section class="passions-section fade-in delay-2">
+            <div class="section-header">
+                <div class="section-badge">
+                    <span>🌟</span>
+                    <span>Curated Gallery</span>
                 </div>
-
-                <button class="carousel-btn next-btn" aria-label="Next slide">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><path d="M9 18l6-6-6-6"></path></svg
-                    >
-                </button>
+                <h2 class="section-title">
+                    Passions & Favorites
+                </h2>
+                <p class="section-subtitle">
+                    点击下方分类，探索我在游戏、球星、音乐、动漫影视与美食领域的挚爱收藏。
+                </p>
             </div>
-            <p class="carousel-caption"></p>
-        </section>
 
-        <!-- Favorite NBA Player Section -->
-        <section class="favorites-section fade-in delay-3">
-            <h2 class="section-title">Favorite NBA Player</h2>
-            <div class="carousel-container glass">
-                <button
-                    class="carousel-btn prev-btn"
-                    aria-label="Previous slide"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><path d="M15 18l-6-6 6-6"></path></svg
-                    >
-                </button>
-
-                <div class="carousel-track-container">
-                    <ul class="carousel-track">
-                        <li class="carousel-slide current-slide">
-                            <img
-                                src="/about/NBA Player/Durant.png"
-                                alt="Kevin Durant"
-                                class="carousel-image"
-                                data-title="Kevin Durant"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/NBA Player/Dončić.png"
-                                alt="Luka Dončić"
-                                class="carousel-image"
-                                data-title="Luka Dončić"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/NBA Player/Stephen-Curry.png"
-                                alt="Stephen Curry"
-                                class="carousel-image"
-                                data-title="Stephen Curry"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/NBA Player/Irving.png"
-                                alt="Kyrie Irving"
-                                class="carousel-image"
-                                data-title="Kyrie Irving"
-                            />
-                        </li>
-                    </ul>
+            <!-- Category Filter Tabs -->
+            <div class="filter-tabs-container">
+                <div class="filter-tabs glass" role="tablist" aria-label="Favorites Categories">
+                    {categories.map((cat, idx) => (
+                        <button
+                            type="button"
+                            class={`filter-tab ${idx === 0 ? 'active' : ''}`}
+                            data-filter={cat.id}
+                            role="tab"
+                            aria-selected={idx === 0 ? 'true' : 'false'}
+                        >
+                            <span class="tab-icon">{cat.icon}</span>
+                            <span class="tab-label">{cat.label}</span>
+                            <span class="tab-count">{cat.count}</span>
+                        </button>
+                    ))}
                 </div>
-
-                <button class="carousel-btn next-btn" aria-label="Next slide">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><path d="M9 18l6-6-6-6"></path></svg
-                    >
-                </button>
             </div>
-            <p class="carousel-caption"></p>
-        </section>
 
-        <!-- Favorite K-pop Groups Section -->
-        <section class="favorites-section fade-in delay-4">
-            <h2 class="section-title">Favorite K-pop Groups</h2>
-            <div class="carousel-container glass">
-                <button
-                    class="carousel-btn prev-btn"
-                    aria-label="Previous slide"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><path d="M15 18l-6-6 6-6"></path></svg
+            <!-- Passions Grid -->
+            <div class="passions-grid" id="passions-grid">
+                {passionItems.map((item) => (
+                    <article
+                        class="passion-card glass"
+                        style={item.category === categories[0].id ? 'display: flex;' : 'display: none;'}
+                        data-category={item.category}
+                        data-id={item.id}
                     >
-                </button>
-
-                <div class="carousel-track-container">
-                    <ul class="carousel-track">
-                        <li class="carousel-slide current-slide">
+                        <div class="card-media-wrapper">
                             <img
-                                src="/about/K-pop/aespa.png"
-                                alt="aespa"
-                                class="carousel-image"
-                                data-title="aespa"
+                                src={item.image}
+                                alt={item.title}
+                                class="card-img"
+                                loading="lazy"
                             />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/K-pop/i-dle.png"
-                                alt="I-DLE"
-                                class="carousel-image"
-                                data-title="I-DLE"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/K-pop/newjeans.jpg"
-                                alt="NewJeans"
-                                class="carousel-image"
-                                data-title="NewJeans"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/K-pop/LE-SSERAFIM.png"
-                                alt="LE SSERAFIM"
-                                class="carousel-image"
-                                data-title="LE SSERAFIM"
-                            />
-                        </li>
-                    </ul>
-                </div>
-
-                <button class="carousel-btn next-btn" aria-label="Next slide">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><path d="M9 18l6-6-6-6"></path></svg
-                    >
-                </button>
+                            <div class="media-overlay"></div>
+                            <span class="card-category-badge">
+                                <span class="badge-icon">{item.categoryIcon}</span>
+                                <span>{item.categoryLabel}</span>
+                            </span>
+                            {item.tag && <span class="card-tag-badge">{item.tag}</span>}
+                        </div>
+                        <div class="card-info">
+                            <h3 class="card-title">{item.title}</h3>
+                            <p class="card-subtitle">{item.subtitle}</p>
+                        </div>
+                    </article>
+                ))}
             </div>
-            <p class="carousel-caption"></p>
-        </section>
 
-        <!-- Favorite Animation Section -->
-        <section class="favorites-section fade-in delay-5">
-            <h2 class="section-title">Favorite Animation</h2>
-            <div class="carousel-container glass">
-                <button
-                    class="carousel-btn prev-btn"
-                    aria-label="Previous slide"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><path d="M15 18l-6-6 6-6"></path></svg
-                    >
-                </button>
-
-                <div class="carousel-track-container">
-                    <ul class="carousel-track">
-                        <li class="carousel-slide current-slide">
-                            <img
-                                src="/about/Animation/Spider-Man Into the Spider-Verse.png"
-                                alt="Spider-Man: Into the Spider-Verse"
-                                class="carousel-image"
-                                data-title="Spider-Man: Into the Spider-Verse"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/Animation/Arcane.jpg"
-                                alt="Arcane"
-                                class="carousel-image"
-                                data-title="Arcane"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/Animation/你的名字.jpg"
-                                alt="Your Name"
-                                class="carousel-image"
-                                data-title="Your Name"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/Animation/Naruto.png"
-                                alt="Naruto"
-                                class="carousel-image"
-                                data-title="Naruto"
-                            />
-                        </li>
-                    </ul>
-                </div>
-
-                <button class="carousel-btn next-btn" aria-label="Next slide">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><path d="M9 18l6-6-6-6"></path></svg
-                    >
-                </button>
+            <!-- Empty State for Filters -->
+            <div class="empty-state hidden" id="filter-empty">
+                <div class="empty-emoji">🔍</div>
+                <h3>该分类下暂无内容</h3>
+                <p>探索其他分类看看吧</p>
             </div>
-            <p class="carousel-caption"></p>
-        </section>
-
-        <!-- Favorite Movies Section -->
-        <section class="favorites-section fade-in delay-6">
-            <h2 class="section-title">Favorite Movies</h2>
-            <div class="carousel-container glass">
-                <button
-                    class="carousel-btn prev-btn"
-                    aria-label="Previous slide"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><path d="M15 18l-6-6 6-6"></path></svg
-                    >
-                </button>
-
-                <div class="carousel-track-container">
-                    <ul class="carousel-track">
-                        <li class="carousel-slide current-slide">
-                            <img
-                                src="/about/movies/当幸福来敲门.jpg"
-                                alt="The Pursuit of Happyness"
-                                class="carousel-image"
-                                data-title="The Pursuit of Happyness"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/movies/肖申克的救赎.png"
-                                alt="The Shawshank Redemption"
-                                class="carousel-image"
-                                data-title="The Shawshank Redemption"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/movies/Interstellar.jpg"
-                                alt="Interstellar"
-                                class="carousel-image"
-                                data-title="Interstellar"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/movies/海上钢琴师.png"
-                                alt="The Legend of 1900"
-                                class="carousel-image"
-                                data-title="The Legend of 1900"
-                            />
-                        </li>
-                    </ul>
-                </div>
-
-                <button class="carousel-btn next-btn" aria-label="Next slide">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><path d="M9 18l6-6-6-6"></path></svg
-                    >
-                </button>
-            </div>
-            <p class="carousel-caption"></p>
-        </section>
-
-        <!-- Favorite Foods Section -->
-        <section class="favorites-section fade-in delay-7">
-            <h2 class="section-title">Favorite Foods</h2>
-            <div class="carousel-container glass">
-                <button
-                    class="carousel-btn prev-btn"
-                    aria-label="Previous slide"
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><path d="M15 18l-6-6 6-6"></path></svg
-                    >
-                </button>
-
-                <div class="carousel-track-container">
-                    <ul class="carousel-track">
-                        <li class="carousel-slide current-slide">
-                            <img
-                                src="/about/Foods/北京烤鸭.jpg"
-                                alt="Peking Duck"
-                                class="carousel-image"
-                                data-title="Peking Duck"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/Foods/火锅.jpg"
-                                alt="Hot Pot"
-                                class="carousel-image"
-                                data-title="Hot Pot"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/Foods/腊汁肉夹馍.jpg"
-                                alt="Roujiamo"
-                                class="carousel-image"
-                                data-title="Roujiamo"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/Foods/麦当劳.jpg"
-                                alt="McDonald's"
-                                class="carousel-image"
-                                data-title="McDonald's"
-                            />
-                        </li>
-                        <li class="carousel-slide">
-                            <img
-                                src="/about/Foods/烤冷面.jpg"
-                                alt="Grilled Cold Noodles"
-                                class="carousel-image"
-                                data-title="Grilled Cold Noodles"
-                            />
-                        </li>
-                    </ul>
-                </div>
-
-                <button class="carousel-btn next-btn" aria-label="Next slide">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        ><path d="M9 18l6-6-6-6"></path></svg
-                    >
-                </button>
-            </div>
-            <p class="carousel-caption"></p>
         </section>
     </div>
 </BaseLayout>
 
 <script>
-    // Carousel Logic - Infinite Loop with Clones
-    // Using a separate scope for each carousel on the page
-    const carousels = document.querySelectorAll(".favorites-section");
+    function initPassionsFilter() {
+        const tabs = document.querySelectorAll<HTMLButtonElement>('.filter-tab');
+        const cards = document.querySelectorAll<HTMLElement>('.passion-card');
+        const emptyState = document.getElementById('filter-empty');
 
-    carousels.forEach((carouselSection) => {
-        const track = carouselSection.querySelector(
-            ".carousel-track",
-        ) as HTMLElement;
-        const nextButton = carouselSection.querySelector(".next-btn");
-        const prevButton = carouselSection.querySelector(".prev-btn");
-        const caption = carouselSection.querySelector(
-            ".carousel-caption",
-        ) as HTMLElement;
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const targetFilter = tab.getAttribute('data-filter');
+                if (!targetFilter) return;
 
-        if (track && track.children.length > 0) {
-            let slides = Array.from(track.children) as HTMLElement[];
-
-            // Clone first and last slides
-            const firstClone = slides[0].cloneNode(true) as HTMLElement;
-            const lastClone = slides[slides.length - 1].cloneNode(
-                true,
-            ) as HTMLElement;
-
-            firstClone.classList.add("clone-first");
-            lastClone.classList.add("clone-last");
-
-            // Append/Prepend clones
-            track.appendChild(firstClone);
-            track.insertBefore(lastClone, slides[0]);
-
-            // Re-query slides to include clones
-            slides = Array.from(track.children) as HTMLElement[];
-
-            // Use let for responsiveness
-            let slideWidth = slides[0].getBoundingClientRect().width;
-
-            // Initial state: Show the real first slide (index 1)
-            let currentIndex = 1;
-
-            // Helper to update caption
-            const updateCaption = (index: number) => {
-                if (!caption) return;
-                const img = slides[index].querySelector("img");
-                if (img && img.dataset.title) {
-                    caption.textContent = img.dataset.title;
-                    // Trigger a subtle animation
-                    caption.classList.remove("fade-text");
-                    void caption.offsetWidth; // trigger reflow
-                    caption.classList.add("fade-text");
-                }
-            };
-
-            // Arrange the slides next to one another
-            const setSlidePosition = (slide: HTMLElement, index: number) => {
-                slide.style.left = slideWidth * index + "px";
-            };
-            slides.forEach(setSlidePosition);
-
-            // Move to initial position without animation
-            track.style.transition = "none";
-            track.style.transform = `translateX(-${
-                slideWidth * currentIndex
-            }px)`;
-            slides[currentIndex].classList.add("current-slide");
-            updateCaption(currentIndex);
-
-            const moveToSlide = (index: number, animate = true) => {
-                if (animate) {
-                    track.style.transition =
-                        "transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)";
-                } else {
-                    track.style.transition = "none";
-                }
-                track.style.transform = `translateX(-${slideWidth * index}px)`;
-
-                // Update active class
-                track
-                    .querySelector(".current-slide")
-                    ?.classList.remove("current-slide");
-                slides[index].classList.add("current-slide");
-
-                currentIndex = index;
-                updateCaption(index);
-            };
-
-            // click left
-            prevButton?.addEventListener("click", () => {
-                if (currentIndex <= 0) return; // Wait for reset
-                moveToSlide(currentIndex - 1);
-            });
-
-            // click right
-            nextButton?.addEventListener("click", () => {
-                if (currentIndex >= slides.length - 1) return; // Wait for reset
-                moveToSlide(currentIndex + 1);
-            });
-
-            // Handle Loop Reset on Transition End
-            track.addEventListener("transitionend", (e) => {
-                if (e.propertyName !== "transform") return;
-
-                if (slides[currentIndex].classList.contains("clone-last")) {
-                    track.style.transition = "none";
-                    currentIndex = slides.length - 2;
-                    track.style.transform = `translateX(-${
-                        slideWidth * currentIndex
-                    }px)`;
-
-                    track
-                        .querySelector(".current-slide")
-                        ?.classList.remove("current-slide");
-                    slides[currentIndex].classList.add("current-slide");
-                }
-
-                if (slides[currentIndex].classList.contains("clone-first")) {
-                    track.style.transition = "none";
-                    currentIndex = 1;
-                    track.style.transform = `translateX(-${
-                        slideWidth * currentIndex
-                    }px)`;
-
-                    track
-                        .querySelector(".current-slide")
-                        ?.classList.remove("current-slide");
-                    slides[currentIndex].classList.add("current-slide");
-                }
-            });
-
-            // Resize handler to fix positions
-            window.addEventListener("resize", () => {
-                slideWidth = slides[0].getBoundingClientRect().width;
-                slides.forEach((slide, index) => {
-                    slide.style.left = slideWidth * index + "px";
+                // Update active tab
+                tabs.forEach(t => {
+                    t.classList.remove('active');
+                    t.setAttribute('aria-selected', 'false');
                 });
-                // Update transform to stay on current slide
-                track.style.transition = "none";
-                track.style.transform = `translateX(-${
-                    slideWidth * currentIndex
-                }px)`;
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+
+                let visibleCount = 0;
+
+                // Filter cards with smooth animation
+                cards.forEach(card => {
+                    const cardCategory = card.getAttribute('data-category');
+                    if (cardCategory === targetFilter) {
+                        card.style.display = 'flex';
+                        card.classList.remove('card-fade-out');
+                        card.classList.add('card-fade-in');
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                        card.classList.remove('card-fade-in');
+                    }
+                });
+
+                // Handle empty state
+                if (emptyState) {
+                    if (visibleCount === 0) {
+                        emptyState.classList.remove('hidden');
+                    } else {
+                        emptyState.classList.add('hidden');
+                    }
+                }
             });
-        }
-    });
+        });
+    }
+
+    // Initialize on DOM ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPassionsFilter);
+    } else {
+        initPassionsFilter();
+    }
 </script>
 
 <style>
-    .about-container {
-        max-width: 1080px;
+    .about-page {
+        max-width: 1200px;
         margin: 0 auto;
-        padding: 4rem 2rem 4rem; /* Top padding for fixed navbar */
+        padding: 5rem 1.5rem 6rem;
         display: flex;
         flex-direction: column;
-        gap: 4rem;
+        gap: 4.5rem;
+    }
+
+    /* Base Glassmorphism */
+    .glass {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(24px);
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(0, 0, 0, 0.07);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+        transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    :global(.dark) .glass {
+        background: rgba(24, 24, 27, 0.75);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
     }
 
     /* Animations */
-    @keyframes fadeIn {
+    @keyframes fadeInScale {
         from {
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(20px) scale(0.98);
         }
         to {
             opacity: 1;
-            transform: translateY(0);
+            transform: translateY(0) scale(1);
         }
     }
 
     .fade-in {
         opacity: 0;
-        animation: fadeIn 1s ease-out forwards;
+        animation: fadeInScale 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    .delay-1 {
-        animation-delay: 0.2s;
-    }
-    .delay-2 {
-        animation-delay: 0.4s;
-    }
-    .delay-3 {
-        animation-delay: 0.6s;
-    }
-    .delay-4 {
-        animation-delay: 0.8s;
-    }
-    .delay-5 {
-        animation-delay: 1s;
-    }
-    .delay-6 {
-        animation-delay: 1.2s;
-    }
-    .delay-7 {
-        animation-delay: 1.4s;
-    }
+    .delay-1 { animation-delay: 0.15s; }
+    .delay-2 { animation-delay: 0.3s; }
 
-    /* Header Section */
-    .header-section {
+    /* Page Header */
+    .page-header {
         text-align: center;
-        margin-bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.25rem;
+        max-width: 800px;
+        margin: 0 auto;
     }
 
-    h1 {
-        font-size: 3.5rem;
+    .header-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 1rem;
+        border-radius: 9999px;
+        background: rgba(0, 113, 227, 0.08);
+        color: var(--color-accent, #0071e3);
+        font-size: 0.875rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        border: 1px solid rgba(0, 113, 227, 0.2);
+    }
+
+    :global(.dark) .header-badge {
+        background: rgba(41, 151, 255, 0.15);
+        color: #5ac8fa;
+        border-color: rgba(41, 151, 255, 0.3);
+    }
+
+    .pulse-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: #34c759;
+        box-shadow: 0 0 8px rgba(52, 199, 89, 0.8);
+        animation: pulseAnimation 2s infinite;
+    }
+
+    @keyframes pulseAnimation {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.3); opacity: 0.7; }
+    }
+
+    .page-title {
+        font-size: clamp(2.5rem, 5vw, 3.75rem);
         font-weight: 700;
-        letter-spacing: -0.02em;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        color: var(--color-text-main, #1d1d1f);
         margin: 0;
     }
 
     .gradient-text {
-        background: linear-gradient(135deg, #1d1d1f 0%, #434344 100%);
+        background: linear-gradient(135deg, #0071e3 0%, #a855f7 50%, #ec4899 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
 
     :global(.dark) .gradient-text {
-        background: linear-gradient(135deg, #f5f5f7 0%, #86868b 100%);
+        background: linear-gradient(135deg, #38bdf8 0%, #c084fc 50%, #f472b6 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
     }
 
-    /* Profile Section */
-    .profile-card {
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 4rem;
-        padding: 3rem;
-        border-radius: 32px; /* More rounded, closer to Material 3 */
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
-        align-items: start;
-    }
-
-    :global(.dark) .profile-card {
-        background: rgba(30, 30, 32, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
-    }
-
-    .profile-image-container {
-        width: 100%;
-        aspect-ratio: 3/4;
-        border-radius: 24px;
-        overflow: hidden;
-        background-color: #f0f0f0;
-        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
-    }
-
-    .profile-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.5s ease;
-    }
-
-    .profile-image:hover {
-        transform: scale(1.03);
-    }
-
-    :global(.dark) .profile-image-container {
-        background-color: #2c2c2e;
-    }
-
-    .profile-info {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-        padding-top: 1rem;
-    }
-
-    /* Material/Google Style Typography & Layout */
-    .info-header .name {
-        font-size: 2.5rem;
-        font-weight: 500; /* Google Sans typically uses lighter weights for headings */
-        color: var(--color-text-main);
-        margin: 0 0 0.5rem 0;
-        line-height: 1.2;
-    }
-
-    .nickname {
-        font-weight: 400;
-        color: var(--color-text-secondary);
-        font-size: 0.8em;
-    }
-
-    .role {
-        font-size: 1.25rem;
-        color: var(--color-accent);
+    .page-subtitle {
+        font-size: clamp(1.05rem, 2vw, 1.25rem);
+        color: var(--color-text-secondary, #86868b);
+        line-height: 1.6;
         margin: 0;
-        font-weight: 500;
     }
 
-    .info-grid {
+    /* Bento Grid System */
+    .bento-container {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        grid-template-columns: repeat(12, 1fr);
         gap: 1.5rem;
     }
 
-    .info-item {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-
-    .label {
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--color-text-secondary);
-        font-weight: 600;
-    }
-
-    .value {
-        font-size: 1.125rem;
-        color: var(--color-text-main);
-        font-weight: 400;
-    }
-
-    .hobbies-container {
-        display: flex;
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.75rem;
-    }
-
-    /* Material 3 Style Chips */
-    .tag {
-        padding: 0.5rem 1rem;
-        background-color: rgba(0, 0, 0, 0.05); /* Surface Container Low */
-        color: var(--color-text-main);
-        border-radius: 8px; /* Small radius for aesthetic, or 16px for full pill */
-        font-size: 0.9375rem;
-        font-weight: 500;
-        transition: all 0.2s ease;
-        border: 1px solid transparent;
-    }
-
-    .tag:hover {
-        background-color: rgba(0, 113, 227, 0.1); /* Tint with accent color */
-        color: var(--color-accent);
-        transform: translateY(-1px);
-    }
-
-    :global(.dark) .tag {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    :global(.dark) .tag:hover {
-        background-color: rgba(10, 132, 255, 0.2);
-        color: #409cff;
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 900px) {
-        .profile-card {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-        }
-
-        .profile-image-container {
-            max-width: 300px;
-            margin: 0 auto;
-        }
-
-        .profile-info {
-            text-align: center;
-            align-items: center;
-        }
-
-        .info-grid {
-            width: 100%;
-            justify-items: center;
-        }
-
-        .tags {
-            justify-content: center;
-        }
-    }
-
-    /* Favorites Section */
-    .favorites-section {
-        display: flex;
-        flex-direction: column;
-        gap: 1.5rem;
-    }
-
-    .section-title {
-        font-size: 2rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-        color: var(--color-text-main);
-    }
-
-    .carousel-container {
+    .bento-card {
+        border-radius: 28px;
+        padding: 2rem;
         position: relative;
-        height: 600px; /* Adjust based on image content */
-        width: 100%;
-        margin: 0 auto;
-        border-radius: 24px;
         overflow: hidden;
-        padding: 2rem 0; /* Space for buttons effectively if outside, but buttons are inside */
         display: flex;
-        align-items: center;
-        background: rgba(255, 255, 255, 0.6);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.4);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        flex-direction: column;
     }
 
-    .carousel-caption {
-        text-align: center;
-        font-size: 1.75rem;
-        font-weight: 500;
-        margin-top: 1.5rem;
-        color: var(--color-text-main);
-        letter-spacing: -0.01em;
-        height: 2.5rem; /* Reserve space */
+    .bento-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+        border-color: rgba(0, 113, 227, 0.25);
+    }
+
+    :global(.dark) .bento-card:hover {
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Card 1: Main Profile Card (8 Columns) */
+    .profile-main-card {
+        grid-column: span 8;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 2.25rem;
+        background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(245,247,250,0.8) 100%);
+    }
+
+    :global(.dark) .profile-main-card {
+        background: linear-gradient(135deg, rgba(32,32,36,0.85) 0%, rgba(20,20,24,0.8) 100%);
+    }
+
+    .avatar-wrapper {
+        position: relative;
+        width: 220px;
+        height: 220px;
+        flex-shrink: 0;
+    }
+
+    .avatar-ring {
+        position: absolute;
+        inset: -5px;
+        border-radius: 32px;
+        background: linear-gradient(135deg, #0071e3, #c084fc, #f43f5e);
+        opacity: 0.75;
+        filter: blur(10px);
         transition: opacity 0.3s ease;
     }
 
-    @keyframes fadeInText {
-        from {
-            opacity: 0;
-            transform: translateY(5px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+    .profile-main-card:hover .avatar-ring {
+        opacity: 1;
+        filter: blur(14px);
     }
 
-    .fade-text {
-        animation: fadeInText 0.5s ease forwards;
-        margin-top: 0%;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    :global(.dark) .carousel-container {
-        background: rgba(28, 28, 30, 0.6);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    }
-
-    .carousel-track-container {
-        height: 100%;
-        width: 90%; /* Main carousel width */
-        margin: 0 auto;
+    .avatar-img {
         position: relative;
-        overflow: hidden;
-    }
-
-    .carousel-track {
-        padding: 0;
-        margin: 0;
-        list-style: none;
-        position: relative;
-        height: 100%;
-        transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-
-    .carousel-slide {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: 100%;
-        padding: 0 4rem; /* Gap between slides - increased mainly to show partial next slide or just center better */
-        box-sizing: border-box;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .carousel-image {
         width: 100%;
         height: 100%;
         object-fit: cover;
-        border-radius: 16px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-        transition: transform 0.3s ease;
+        border-radius: 28px;
+        border: 2px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
 
-    .carousel-image:hover {
-        transform: scale(1.02);
+    :global(.dark) .avatar-img {
+        border-color: rgba(255, 255, 255, 0.15);
     }
 
-    .carousel-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(255, 255, 255, 0.8);
-        border: none;
-        width: 3rem;
-        height: 3rem;
+    .profile-content {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        color: #15803d;
+        background: rgba(34, 197, 94, 0.1);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        align-self: flex-start;
+        border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    :global(.dark) .status-badge {
+        color: #4ade80;
+        background: rgba(34, 197, 94, 0.15);
+        border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .status-indicator {
+        width: 6px;
+        height: 6px;
         border-radius: 50%;
-        cursor: pointer;
-        z-index: 10;
+        background-color: #22c55e;
+    }
+
+    .profile-name {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--color-text-main, #1d1d1f);
+        margin: 0;
+        line-height: 1.2;
+    }
+
+    .profile-alias {
+        font-weight: 400;
+        color: var(--color-text-secondary, #86868b);
+        font-size: 0.75em;
+        margin-left: 0.35rem;
+        letter-spacing: -0.01em;
+    }
+
+    .profile-role {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: var(--color-text-secondary, #86868b);
+        margin: 0;
+    }
+
+    .profile-bio {
+        font-size: 0.95rem;
+        line-height: 1.6;
+        color: var(--color-text-main, #333336);
+        margin: 0;
+    }
+
+    :global(.dark) .profile-bio {
+        color: #d1d1d6;
+    }
+
+    /* Card 2: Location Card (4 Columns) */
+    .info-card {
+        grid-column: span 4;
+        justify-content: space-between;
+        background: linear-gradient(145deg, rgba(255,255,255,0.85) 0%, rgba(240,244,250,0.7) 100%);
+    }
+
+    :global(.dark) .info-card {
+        background: linear-gradient(145deg, rgba(28,28,32,0.85) 0%, rgba(20,20,24,0.7) 100%);
+    }
+
+    .card-icon-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .icon-box {
+        font-size: 1.5rem;
+        width: 2.75rem;
+        height: 2.75rem;
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 14px;
+        background: rgba(0, 0, 0, 0.04);
+    }
+
+    :global(.dark) .icon-box {
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    .card-tag {
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--color-text-secondary, #86868b);
+    }
+
+    .info-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--color-text-main, #1d1d1f);
+        margin: 0 0 0.5rem 0;
+    }
+
+    .info-desc {
+        font-size: 0.92rem;
+        color: var(--color-text-secondary, #86868b);
+        line-height: 1.5;
+        margin: 0;
+    }
+
+    .micro-stats {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1.25rem;
+    }
+
+    .stat-pill {
+        font-size: 0.8125rem;
+        font-weight: 500;
+        padding: 0.35rem 0.75rem;
+        border-radius: 9999px;
+        background: rgba(0, 113, 227, 0.08);
+        color: var(--color-accent, #0071e3);
+    }
+
+    :global(.dark) .stat-pill {
+        background: rgba(41, 151, 255, 0.12);
+        color: #70b4ff;
+    }
+
+    /* Card 3: MBTI Card (4 Columns) */
+    .mbti-card {
+        grid-column: span 4;
+        background: linear-gradient(135deg, rgba(238, 242, 255, 0.8) 0%, rgba(243, 232, 255, 0.6) 100%);
+        border-color: rgba(168, 85, 247, 0.15);
+    }
+
+    :global(.dark) .mbti-card {
+        background: linear-gradient(135deg, rgba(46, 32, 68, 0.5) 0%, rgba(28, 28, 35, 0.8) 100%);
+        border-color: rgba(168, 85, 247, 0.2);
+    }
+
+    .mbti-badge {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .mbti-type {
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .mbti-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--color-text-main, #1d1d1f);
+    }
+
+    .mbti-desc {
+        font-size: 0.875rem;
+        line-height: 1.5;
+        color: var(--color-text-secondary, #6b7280);
+        margin: 0 0 1rem 0;
+    }
+
+    :global(.dark) .mbti-desc {
+        color: #9ca3af;
+    }
+
+    .traits-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .trait-tag {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.6rem;
+        border-radius: 8px;
+        background: rgba(168, 85, 247, 0.12);
+        color: #7c3aed;
+    }
+
+    :global(.dark) .trait-tag {
+        background: rgba(168, 85, 247, 0.25);
+        color: #d8b4fe;
+    }
+
+    /* Card 4: Hobbies Chips (4 Columns) */
+    .hobbies-card {
+        grid-column: span 4;
+        justify-content: space-between;
+    }
+
+    .hobbies-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--color-text-main, #1d1d1f);
+        margin: 0 0 1rem 0;
+    }
+
+    .hobby-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .hobby-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.4rem 0.8rem;
+        border-radius: 12px;
+        font-size: 0.8125rem;
+        font-weight: 500;
+        background: rgba(0, 0, 0, 0.04);
+        color: var(--color-text-main, #1d1d1f);
+        border: 1px solid rgba(0, 0, 0, 0.05);
         transition: all 0.2s ease;
+    }
+
+    :global(.dark) .hobby-chip {
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .hobby-chip:hover {
+        transform: translateY(-2px);
+        background: rgba(0, 113, 227, 0.1);
+        color: var(--color-accent, #0071e3);
+        border-color: rgba(0, 113, 227, 0.2);
+    }
+
+    /* Card 5: Philosophy (4 Columns) */
+    .philosophy-card {
+        grid-column: span 4;
+        justify-content: space-between;
+        background: linear-gradient(135deg, rgba(255, 251, 235, 0.8) 0%, rgba(254, 243, 199, 0.5) 100%);
+        border-color: rgba(245, 158, 11, 0.2);
+    }
+
+    :global(.dark) .philosophy-card {
+        background: linear-gradient(135deg, rgba(40, 32, 20, 0.6) 0%, rgba(28, 28, 32, 0.8) 100%);
+        border-color: rgba(245, 158, 11, 0.2);
+    }
+
+    .philosophy-quote {
+        font-size: 1.05rem;
+        font-style: italic;
+        line-height: 1.55;
+        font-weight: 500;
+        color: var(--color-text-main, #1d1d1f);
+        margin: 0.5rem 0 1rem 0;
+    }
+
+    .quote-author {
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: #d97706;
+        text-align: right;
+    }
+
+    :global(.dark) .quote-author {
+        color: #fbbf24;
+    }
+
+    /* Passions Showcase Section */
+    .passions-section {
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+        margin-top: 1rem;
+    }
+
+    .section-header {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .section-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.8rem;
+        border-radius: 9999px;
+        background: rgba(168, 85, 247, 0.1);
+        color: #9333ea;
+        font-size: 0.8125rem;
+        font-weight: 600;
+    }
+
+    :global(.dark) .section-badge {
+        background: rgba(168, 85, 247, 0.2);
+        color: #c084fc;
+    }
+
+    .section-title {
+        font-size: clamp(2rem, 4vw, 2.75rem);
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--color-text-main, #1d1d1f);
+        margin: 0;
+    }
+
+    .section-subtitle {
+        font-size: 1.05rem;
+        color: var(--color-text-secondary, #86868b);
+        max-width: 600px;
+        margin: 0;
+    }
+
+    /* Filter Tabs */
+    .filter-tabs-container {
+        display: flex;
+        justify-content: center;
+        position: sticky;
+        top: 5rem;
+        z-index: 20;
+        padding: 0.5rem 0;
+    }
+
+    .filter-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+        padding: 0.4rem;
+        border-radius: 9999px;
+        max-width: 100%;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .filter-tab {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.6rem 1.15rem;
+        border-radius: 9999px;
+        border: none;
+        background: transparent;
+        color: var(--color-text-secondary, #86868b);
+        font-size: 0.9375rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        user-select: none;
+    }
+
+    .filter-tab:hover {
+        color: var(--color-text-main, #1d1d1f);
+        background: rgba(0, 0, 0, 0.04);
+    }
+
+    :global(.dark) .filter-tab:hover {
+        background: rgba(255, 255, 255, 0.08);
+    }
+
+    .filter-tab.active {
+        background: var(--color-text-main, #1d1d1f);
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    }
+
+    :global(.dark) .filter-tab.active {
+        background: #ffffff;
+        color: #000000;
+        box-shadow: 0 4px 14px rgba(255, 255, 255, 0.2);
+    }
+
+    .tab-count {
+        font-size: 0.75rem;
+        padding: 0.15rem 0.45rem;
+        border-radius: 9999px;
+        background: rgba(0, 0, 0, 0.08);
+        color: inherit;
+    }
+
+    .filter-tab.active .tab-count {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    :global(.dark) .filter-tab.active .tab-count {
+        background: rgba(0, 0, 0, 0.2);
+    }
+
+    /* Passions Card Grid */
+    .passions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1.75rem;
+    }
+
+    .passion-card {
+        border-radius: 22px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .passion-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        border-color: rgba(0, 113, 227, 0.3);
+    }
+
+    :global(.dark) .passion-card:hover {
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .card-media-wrapper {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16 / 10;
+        overflow: hidden;
+        background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    :global(.dark) .card-media-wrapper {
+        background-color: rgba(255, 255, 255, 0.04);
+    }
+
+    .card-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 20%;
+        display: block;
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .passion-card:hover .card-img {
+        transform: scale(1.06);
+    }
+
+    .media-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.35) 0%, transparent 45%);
+        pointer-events: none;
+        opacity: 0.5;
+        transition: opacity 0.3s ease;
+    }
+
+    .passion-card:hover .media-overlay {
+        opacity: 0.7;
+    }
+
+    .card-category-badge {
+        position: absolute;
+        top: 0.75rem;
+        left: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.3rem 0.65rem;
+        border-radius: 9999px;
+        background: rgba(0, 0, 0, 0.65);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        color: #ffffff;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .card-tag-badge {
+        position: absolute;
+        bottom: 0.75rem;
+        right: 0.75rem;
+        padding: 0.25rem 0.6rem;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         color: #1d1d1f;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        font-size: 0.7rem;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
 
-    :global(.dark) .carousel-btn {
-        background: rgba(60, 60, 60, 0.8);
+    :global(.dark) .card-tag-badge {
+        background: rgba(30, 30, 35, 0.85);
         color: #f5f5f7;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
     }
 
-    .carousel-btn:hover {
-        transform: translateY(-50%) scale(1.1);
-        background: rgba(255, 255, 255, 1);
-    }
-    :global(.dark) .carousel-btn:hover {
-        background: rgba(80, 80, 80, 1);
-    }
-
-    .prev-btn {
-        left: 2rem;
+    .card-info {
+        padding: 1.35rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+        flex-grow: 1;
     }
 
-    .next-btn {
-        right: 2rem;
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: var(--color-text-main, #1d1d1f);
+        margin: 0;
+        line-height: 1.3;
+    }
+
+    .card-subtitle {
+        font-size: 0.875rem;
+        color: var(--color-text-secondary, #86868b);
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    /* Filter Animation Classes */
+    @keyframes cardIn {
+        from {
+            opacity: 0;
+            transform: translateY(16px) scale(0.96);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .card-fade-in {
+        animation: cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--color-text-secondary, #86868b);
+    }
+
+    .empty-state.hidden {
+        display: none;
+    }
+
+    .empty-emoji {
+        font-size: 2.5rem;
     }
 
     /* Responsive Design */
     @media (max-width: 1024px) {
-        .carousel-track-container {
-            width: 100%;
+        .profile-main-card {
+            grid-column: span 12;
         }
-
-        .carousel-slide {
-            padding: 0 2rem;
+        .info-card {
+            grid-column: span 6;
+        }
+        .mbti-card {
+            grid-column: span 6;
+        }
+        .hobbies-card {
+            grid-column: span 6;
+        }
+        .philosophy-card {
+            grid-column: span 6;
         }
     }
 
     @media (max-width: 768px) {
-        .about-container {
-            padding-top: 6rem;
+        .about-page {
+            padding: 4.5rem 1rem 4rem;
+            gap: 3.5rem;
         }
 
-        h1 {
-            font-size: 2.5rem;
-        }
-
-        .profile-card {
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            padding: 2rem;
+        .profile-main-card {
+            flex-direction: column;
             text-align: center;
+            padding: 2rem 1.5rem;
+            gap: 1.5rem;
         }
 
-        .profile-image-container {
-            width: 200px;
-            margin: 0 auto;
+        .avatar-wrapper {
+            width: 170px;
+            height: 170px;
         }
 
-        .profile-info {
-            align-items: center;
+        .status-badge {
+            align-self: center;
         }
 
-        .carousel-container {
-            height: 300px;
+        .info-card,
+        .mbti-card,
+        .hobbies-card,
+        .philosophy-card {
+            grid-column: span 12;
+            padding: 1.5rem;
         }
 
-        .prev-btn {
-            left: 0.5rem;
-        }
-        .next-btn {
-            right: 0.5rem;
+        .filter-tabs {
+            border-radius: 20px;
+            justify-content: center;
         }
 
-        .carousel-track-container {
-            width: 100%;
+        .filter-tab {
+            padding: 0.5rem 0.85rem;
+            font-size: 0.875rem;
         }
 
-        .carousel-slide {
-            padding: 0 2rem;
+        .passions-grid {
+            grid-template-columns: 1fr;
+            gap: 1.25rem;
         }
     }
 </style>
