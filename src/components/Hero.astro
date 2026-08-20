@@ -1,9 +1,13 @@
 ---
 import { Image } from "astro:assets";
 import flowerImage from "../assets/flower.jpg";
+import Hero3DCanvas from "./canvas/Hero3DCanvas";
 ---
 
 <section class="hero">
+    <!-- 3D 粒子光效交互背景 (R3F + Drei) -->
+    <Hero3DCanvas client:load />
+
     <div class="container hero-content">
         <h1 class="headline">
             Hello, I'm Rain. <span class="wave-emoji">👋</span>
@@ -13,8 +17,15 @@ import flowerImage from "../assets/flower.jpg";
         </p>
 
         <div class="cta-group">
-            <a href="/about" class="button primary">About Me</a>
-            <a href="/contact" class="button secondary">Contact Me</a>
+            <a href="/about" class="button primary">
+                <span>About Me</span>
+                <svg class="arrow-icon" viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                    <path fill-rule="evenodd" d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06z" clip-rule="evenodd"/>
+                </svg>
+            </a>
+            <a href="/contact" class="button secondary">
+                <span>Contact Me</span>
+            </a>
         </div>
 
         <div class="hero-image-container">
@@ -37,12 +48,19 @@ import flowerImage from "../assets/flower.jpg";
 
 <style>
     .hero {
+        position: relative;
         padding: var(--spacing-xl) 0;
         text-align: center;
         overflow: hidden;
+        min-height: 85vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .hero-content {
+        position: relative;
+        z-index: 10;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -51,65 +69,128 @@ import flowerImage from "../assets/flower.jpg";
 
     .headline {
         font-size: clamp(2.5rem, 5vw, 4.5rem);
-        font-weight: 700;
+        font-weight: 800;
         line-height: 1.1;
-        letter-spacing: -0.02em;
-        background: linear-gradient(135deg, #0071e3 0%, #bf5af2 100%);
+        letter-spacing: -0.03em;
+        color: #0f172a;
+        background: linear-gradient(180deg, #0f172a 0%, #334155 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        padding-bottom: 0.2em; /* Prevent descender clipping */
+        padding-bottom: 0.15em; /* Prevent descender clipping */
     }
 
-    /* Dark mode gradient */
-    /* Dark mode gradient */
+    /* Dark mode gradient - 冰晶亮白高对比度 */
     :global(.dark) .headline {
-        background: linear-gradient(135deg, #2997ff 0%, #d488ff 100%);
+        color: #ffffff;
+        background: linear-gradient(180deg, #ffffff 40%, #cbd5e1 100%);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 2px 16px rgba(0, 0, 0, 0.85));
     }
 
     .subheadline {
         font-size: clamp(1.2rem, 2vw, 1.5rem);
-        color: var(--color-text-secondary);
+        color: #475569;
         max-width: 800px;
-        font-weight: 400;
+        font-weight: 450;
+    }
+
+    :global(.dark) .subheadline {
+        color: #94a3b8;
+        text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
     }
 
     .cta-group {
         display: flex;
-        gap: var(--spacing-md);
+        gap: 16px;
+        align-items: center;
+        justify-content: center;
         margin-top: var(--spacing-md);
     }
 
     .button {
-        padding: 12px 24px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 28px;
         border-radius: var(--radius-full);
-        font-size: 1rem;
-        font-weight: 500;
-        text-align: centering;
-        transition: all 0.2s ease;
+        font-size: 0.98rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        text-decoration: none;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+        cursor: pointer;
     }
 
+    /* 1. 主按钮 (Primary) - 视觉锚点：白天纯黑，黑夜纯白 */
     .button.primary {
-        background-color: var(--color-accent);
-        color: white;
-        width: 150px;
+        background-color: #0f172a;
+        color: #ffffff;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 4px 14px rgba(15, 23, 42, 0.16), 0 1px 2px rgba(15, 23, 42, 0.08);
     }
 
     .button.primary:hover {
-        background-color: #0077ed; /* Slightly lighter blue */
-        transform: scale(1.02);
+        background-color: #1e293b;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.22);
     }
 
+    .button.primary .arrow-icon {
+        transition: transform 0.2s ease;
+    }
+
+    .button.primary:hover .arrow-icon {
+        transform: translateX(3px);
+    }
+
+    /* 黑夜模式主按钮 */
+    :global(.dark) .button.primary {
+        background-color: #ffffff;
+        color: #000000;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 4px 20px rgba(255, 255, 255, 0.25);
+    }
+
+    :global(.dark) .button.primary:hover {
+        background-color: #f1f5f9;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 28px rgba(255, 255, 255, 0.35);
+    }
+
+    /* 2. 次按钮 (Secondary) - 高级毛玻璃晶透质感 */
     .button.secondary {
-        background-color: transparent;
-        color: var(--color-accent);
-        box-shadow: inset 0 0 0 1px var(--color-accent); /* Border imitation */
-        width: 150px;
+        background-color: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        color: #0f172a;
+        border: 1px solid rgba(15, 23, 42, 0.12);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
     }
 
     .button.secondary:hover {
-        background-color: rgba(0, 113, 227, 0.1);
+        background-color: rgba(255, 255, 255, 0.95);
+        border-color: rgba(15, 23, 42, 0.25);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    }
+
+    /* 黑夜模式次按钮 */
+    :global(.dark) .button.secondary {
+        background-color: rgba(255, 255, 255, 0.07);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        color: #f8fafc;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    :global(.dark) .button.secondary:hover {
+        background-color: rgba(255, 255, 255, 0.14);
+        border-color: rgba(255, 255, 255, 0.35);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 22px rgba(0, 0, 0, 0.5);
     }
 
     .hero-image-container {
