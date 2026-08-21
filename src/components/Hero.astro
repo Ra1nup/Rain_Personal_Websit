@@ -2,6 +2,8 @@
 import { Image } from "astro:assets";
 import flowerImage from "../assets/flower.jpg";
 import Hero3DCanvas from "./canvas/Hero3DCanvas";
+import LatestBlogs from "./LatestBlogs.astro";
+import LatestProjects from "./LatestProjects.astro";
 ---
 
 <section class="hero">
@@ -27,6 +29,12 @@ import Hero3DCanvas from "./canvas/Hero3DCanvas";
                 <span>Contact Me</span>
             </a>
         </div>
+
+        <!-- 最新博客板块 -->
+        <LatestBlogs />
+
+        <!-- 最新作品集板块 -->
+        <LatestProjects />
 
         <div class="hero-image-container">
             <Image

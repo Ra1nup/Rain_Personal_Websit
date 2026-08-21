@@ -1,0 +1,644 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+// 获取所有项目并按 order 排序，取前 3 个精选/最新项目
+const allProjects = await getCollection("projects");
+const latestProjects = allProjects
+  .sort((a, b) => (a.data.order ?? 99) - (b.data.order ?? 99))
+  .slice(0, 3);
+
+// 分类标签配置
+const categoryBadges: Record<string, { label: string }> = {
+  Web: { label: "Web Dev" },
+  AIGC: { label: "AIGC & AI" },
+  Tools: { label: "Tools" },
+  Mobile: { label: "Mobile" },
+};
+---
+
+{
+  latestProjects.length > 0 && (
+    <div class="latest-projects-section">
+      <!-- Section Header -->
+      <div class="section-header">
+        <div class="header-text">
+          <div class="section-tag">
+            <span class="pulse-dot"></span>
+            <span>PORTFOLIO</span>
+          </div>
+          <h2 class="section-title">Featured Projects</h2>
+        </div>
+        <a href="/portfolio" class="view-all-link">
+          <span>View All</span>
+          <svg
+            class="arrow-icon"
+            viewBox="0 0 16 16"
+            width="14"
+            height="14"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </a>
+      </div>
+
+      <!-- 3-Cards Grid -->
+      <div class="projects-grid">
+        {latestProjects.map((project, idx) => {
+          const {
+            title,
+            tagline,
+            category,
+            tags,
+            status,
+            year,
+            coverImage,
+            demoUrl,
+            githubUrl,
+          } = project.data;
+          const slug = project.slug || project.id;
+          const badgeInfo = categoryBadges[category] || { label: category };
+
+          return (
+            <article class="project-card" style={`animation-delay: ${idx * 0.1}s`}>
+              <a
+                href={`/portfolio/${slug}`}
+                class="card-main-link"
+                aria-label={`查看 ${title} 详情`}
+              >
+                <!-- Card Cover -->
+                <div class="card-cover-container">
+                  {coverImage ? (
+                    <Image
+                      src={coverImage}
+                      alt={title}
+                      width={600}
+                      height={340}
+                      widths={[300, 600]}
+                      sizes="(max-width: 768px) 100vw, 300px"
+                      quality="high"
+                      class="card-cover-img"
+                    />
+                  ) : (
+                    <div class="card-cover-fallback">
+                      <span class="fallback-text">{title.slice(0, 2)}</span>
+                    </div>
+                  )}
+                  <div class="card-cover-overlay" />
+
+                  <!-- Top Badges on Cover -->
+                  <div class="cover-top-meta">
+                    <span class="category-pill">{badgeInfo.label}</span>
+                    <div class="status-indicator">
+                      {status === "Live" && <span class="status-dot live" />}
+                      {status === "Completed" && <span class="status-dot completed" />}
+                      {status === "In Progress" && <span class="status-dot wip" />}
+                      <span class="status-text">{status}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body">
+                  <div class="card-title-row">
+                    <h3 class="card-title">{title}</h3>
+                    <span class="project-year">{year}</span>
+                  </div>
+
+                  <p class="card-desc">{tagline}</p>
+
+                  <!-- Tech Tags -->
+                  <div class="tags-row">
+                    {tags.slice(0, 3).map((tag) => (
+                      <span class="tech-tag">{tag}</span>
+                    ))}
+                    {tags.length > 3 && (
+                      <span class="tech-tag more">+{tags.length - 3}</span>
+                    )}
+                  </div>
+                </div>
+              </a>
+
+              <!-- Card Action Footer -->
+              <div class="card-footer">
+                <a href={`/portfolio/${slug}`} class="view-detail-btn">
+                  <span>Explore</span>
+                  <svg
+                    class="card-arrow"
+                    viewBox="0 0 16 16"
+                    width="14"
+                    height="14"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </a>
+
+                <div class="external-links">
+                  {demoUrl && (
+                    <a
+                      href={demoUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="ext-btn"
+                      title="在线体验 / Demo"
+                      aria-label="Live Demo"
+                    >
+                      <svg
+                        width="13"
+                        height="13"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                      >
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                        <polyline points="15 3 21 3 21 9" />
+                        <line x1="10" y1="14" x2="21" y2="3" />
+                      </svg>
+                    </a>
+                  )}
+                  {githubUrl && (
+                    <a
+                      href={githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      class="ext-btn"
+                      title="GitHub 源码"
+                      aria-label="GitHub Repository"
+                    >
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+                      </svg>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .latest-projects-section {
+    width: 100%;
+    max-width: 860px;
+    margin-top: calc(var(--spacing-xl) + 8px);
+    text-align: left;
+  }
+
+  /* Header */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    padding: 0 4px;
+  }
+
+  .header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    color: #0f172a;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    width: fit-content;
+  }
+
+  :global(.dark) .section-tag {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f8fafc;
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #8b5cf6;
+    box-shadow: 0 0 8px #8b5cf6;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  :global(.dark) .pulse-dot {
+    background-color: #a78bfa;
+    box-shadow: 0 0 8px #a78bfa;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(0.85);
+    }
+  }
+
+  .section-title {
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  :global(.dark) .section-title {
+    color: #f8fafc;
+  }
+
+  .view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0f172a;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .view-all-link:hover {
+    background: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.16);
+  }
+
+  .view-all-link .arrow-icon {
+    transition: transform 0.2s ease;
+  }
+
+  .view-all-link:hover .arrow-icon {
+    transform: translateX(3px);
+  }
+
+  :global(.dark) .view-all-link {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  :global(.dark) .view-all-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Grid Layout */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  @media (max-width: 768px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+
+  /* Card */
+  .project-card {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
+    position: relative;
+  }
+
+  .project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+    border-color: rgba(139, 92, 246, 0.35);
+  }
+
+  /* Dark Mode Card */
+  :global(.dark) .project-card {
+    background: rgba(24, 24, 27, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  :global(.dark) .project-card:hover {
+    background: rgba(30, 30, 35, 0.8);
+    border-color: rgba(167, 139, 250, 0.35);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(139, 92, 246, 0.08);
+  }
+
+  .card-main-link {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Cover */
+  .card-cover-container {
+    position: relative;
+    width: 100%;
+    height: 145px;
+    overflow: hidden;
+    background: #0f172a;
+  }
+
+  .card-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project-card:hover .card-cover-img {
+    transform: scale(1.06);
+  }
+
+  .card-cover-fallback {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fallback-text {
+    font-size: 2rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .card-cover-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.45) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .cover-top-meta {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 2;
+  }
+
+  .category-pill {
+    padding: 3px 8px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.9);
+    color: #0f172a;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  }
+
+  .status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #ffffff;
+    font-size: 0.68rem;
+    font-weight: 500;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+  }
+
+  .status-dot.live {
+    background-color: #34c759;
+    box-shadow: 0 0 6px #34c759;
+  }
+
+  .status-dot.completed {
+    background-color: #0071e3;
+  }
+
+  .status-dot.wip {
+    background-color: #ff9500;
+  }
+
+  /* Body */
+  .card-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 8px;
+  }
+
+  .card-title-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 6px;
+  }
+
+  .card-title {
+    font-size: 1.02rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--color-text-main);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.2s ease;
+  }
+
+  .project-card:hover .card-title {
+    color: #8b5cf6;
+  }
+
+  :global(.dark) .project-card:hover .card-title {
+    color: #a78bfa;
+  }
+
+  .project-year {
+    font-size: 0.72rem;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    line-height: 1.48;
+    color: var(--color-text-secondary);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  /* Tech tags */
+  .tags-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 4px;
+  }
+
+  .tech-tag {
+    font-size: 0.7rem;
+    padding: 2px 6px;
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-tertiary);
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    border: 1px solid var(--color-border);
+  }
+
+  .tech-tag.more {
+    color: #8b5cf6;
+    background: rgba(139, 92, 246, 0.08);
+    border-color: rgba(139, 92, 246, 0.2);
+  }
+
+  :global(.dark) .tech-tag.more {
+    color: #c4b5fd;
+    background: rgba(167, 139, 250, 0.12);
+  }
+
+  /* Footer */
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    border-top: 1px solid rgba(15, 23, 42, 0.05);
+    background: rgba(255, 255, 255, 0.3);
+  }
+
+  :global(.dark) .card-footer {
+    border-top-color: rgba(255, 255, 255, 0.06);
+    background: rgba(0, 0, 0, 0.15);
+  }
+
+  .view-detail-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #8b5cf6;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: gap 0.2s ease;
+  }
+
+  :global(.dark) .view-detail-btn {
+    color: #a78bfa;
+  }
+
+  .view-detail-btn:hover {
+    gap: 7px;
+  }
+
+  .card-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .project-card:hover .card-arrow {
+    transform: translateX(3px);
+  }
+
+  .external-links {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .ext-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border-radius: var(--radius-full);
+    color: var(--color-text-secondary);
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border);
+    text-decoration: none;
+    transition: all 0.2s ease;
+  }
+
+  .ext-btn:hover {
+    background: #8b5cf6;
+    color: white;
+    transform: scale(1.1);
+    border-color: #8b5cf6;
+  }
+</style>

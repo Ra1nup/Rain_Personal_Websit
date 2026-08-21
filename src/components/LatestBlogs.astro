@@ -1,0 +1,461 @@
+---
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+// 获取所有博客并按发布日期降序排序，过滤掉无标题的草稿，取最新的 3 篇
+const allPosts = await getCollection("blog");
+const latestPosts = allPosts
+  .filter((post) => Boolean(post.data.title && post.data.title.trim().length > 0))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+---
+
+{
+  latestPosts.length > 0 && (
+    <div class="latest-blogs-section">
+      <!-- Section Header -->
+      <div class="section-header">
+        <div class="header-text">
+          <div class="section-tag">
+            <span class="pulse-dot"></span>
+            <span>BLOG</span>
+          </div>
+          <h2 class="section-title">Latest Blog</h2>
+        </div>
+        <a href="/blog" class="view-all-link">
+          <span>View All</span>
+          <svg
+            class="arrow-icon"
+            viewBox="0 0 16 16"
+            width="14"
+            height="14"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </a>
+      </div>
+
+      <!-- 3-Cards Grid -->
+      <div class="blogs-grid">
+        {latestPosts.map((post, idx) => {
+          const firstTag = post.data.tags && post.data.tags.length > 0 ? post.data.tags[0] : null;
+          const formattedDate = post.data.pubDate.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+
+          return (
+            <a
+              href={`/blog/${post.slug}/`}
+              class="blog-card"
+              style={`animation-delay: ${idx * 0.1}s`}
+            >
+              <!-- Card Cover -->
+              <div class="card-cover-container">
+                {post.data.heroImage ? (
+                  <Image
+                    src={post.data.heroImage}
+                    alt={post.data.title}
+                    width={600}
+                    height={340}
+                    widths={[300, 600]}
+                    sizes="(max-width: 768px) 100vw, 300px"
+                    quality="high"
+                    class="card-cover-img"
+                  />
+                ) : (
+                  <div class="card-cover-fallback">
+                    <span class="fallback-text">{post.data.title.slice(0, 2)}</span>
+                  </div>
+                )}
+                <div class="card-cover-overlay"></div>
+                {firstTag && <span class="card-tag">{firstTag}</span>}
+              </div>
+
+              <!-- Card Content -->
+              <div class="card-body">
+                <div class="card-meta">
+                  <svg
+                    class="calendar-icon"
+                    viewBox="0 0 24 24"
+                    width="12"
+                    height="12"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                  </svg>
+                  <span class="card-date">{formattedDate}</span>
+                </div>
+
+                <h3 class="card-title">{post.data.title}</h3>
+
+                <p class="card-desc">{post.data.description}</p>
+
+                <div class="card-footer">
+                  <span class="read-text">Read</span>
+                  <svg
+                    class="card-arrow"
+                    viewBox="0 0 16 16"
+                    width="14"
+                    height="14"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  )
+}
+
+<style>
+  .latest-blogs-section {
+    width: 100%;
+    max-width: 860px;
+    margin-top: calc(var(--spacing-xl) + 8px);
+    text-align: left;
+  }
+
+  /* Header */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    padding: 0 4px;
+  }
+
+  .header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .section-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    color: #0f172a;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    width: fit-content;
+  }
+
+  :global(.dark) .section-tag {
+    background: rgba(255, 255, 255, 0.08);
+    color: #f8fafc;
+    border-color: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .pulse-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #0071e3;
+    box-shadow: 0 0 8px #0071e3;
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  :global(.dark) .pulse-dot {
+    background-color: #38bdf8;
+    box-shadow: 0 0 8px #38bdf8;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.5;
+      transform: scale(0.85);
+    }
+  }
+
+  .section-title {
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    margin: 0;
+  }
+
+  :global(.dark) .section-title {
+    color: #f8fafc;
+  }
+
+  .view-all-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0f172a;
+    text-decoration: none;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .view-all-link:hover {
+    background: #0f172a;
+    color: #ffffff;
+    border-color: #0f172a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.16);
+  }
+
+  .view-all-link .arrow-icon {
+    transition: transform 0.2s ease;
+  }
+
+  .view-all-link:hover .arrow-icon {
+    transform: translateX(3px);
+  }
+
+  :global(.dark) .view-all-link {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  :global(.dark) .view-all-link:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.4);
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Grid Layout */
+  .blogs-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  @media (max-width: 768px) {
+    .blogs-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+
+  /* Card */
+  .blog-card {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
+    position: relative;
+  }
+
+  .blog-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08), 0 2px 6px rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 113, 227, 0.3);
+    opacity: 1;
+  }
+
+  /* Dark Mode Card */
+  :global(.dark) .blog-card {
+    background: rgba(24, 24, 27, 0.65);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+
+  :global(.dark) .blog-card:hover {
+    background: rgba(30, 30, 35, 0.8);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 255, 255, 0.04);
+  }
+
+  /* Cover */
+  .card-cover-container {
+    position: relative;
+    width: 100%;
+    height: 145px;
+    overflow: hidden;
+    background: #0f172a;
+  }
+
+  .card-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .blog-card:hover .card-cover-img {
+    transform: scale(1.06);
+  }
+
+  .card-cover-fallback {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fallback-text {
+    font-size: 2rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .card-cover-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.35) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .card-tag {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 3px 9px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    border-radius: var(--radius-full);
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #f8fafc;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  /* Body */
+  .card-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 8px;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--color-text-secondary);
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+
+  .calendar-icon {
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+
+  .card-title {
+    font-size: 1.02rem;
+    font-weight: 700;
+    line-height: 1.35;
+    color: var(--color-text-main);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color 0.2s ease;
+  }
+
+  .blog-card:hover .card-title {
+    color: var(--color-accent);
+  }
+
+  :global(.dark) .blog-card:hover .card-title {
+    color: #60a5fa;
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    line-height: 1.48;
+    color: var(--color-text-secondary);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(15, 23, 42, 0.05);
+    color: var(--color-accent);
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  :global(.dark) .card-footer {
+    border-top-color: rgba(255, 255, 255, 0.06);
+    color: #93c5fd;
+  }
+
+  .card-arrow {
+    transition: transform 0.2s ease;
+  }
+
+  .blog-card:hover .card-arrow {
+    transform: translateX(4px);
+  }
+</style>
